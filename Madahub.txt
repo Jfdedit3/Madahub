@@ -4,8 +4,8 @@ workspace.FallenPartsDestroyHeight = -math.huge
 local Window = Library:MakeWindow({
     Title = "Mada Hub 3.9 | Brookhaven RP ",
     SubTitle = "by: Mada",
-    LoadText = "Carregando Mada hub",
-    Flags = "Diavoloooo_Broookhaven"
+    LoadText = "Loading Mada hub",
+    Flags = "Zzz4trox_Broookhaven"
 })
 Window:AddMinimizeButton({
     Button = { Image = "rbxassetid://77855434347030", BackgroundTransparency = 0 },
@@ -9246,4 +9246,5 @@ ToolsTab:AddButton({
                 end
     end
 })
+
 
