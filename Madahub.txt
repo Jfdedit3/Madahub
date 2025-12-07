@@ -110,6 +110,199 @@ BrookMusicTab:AddTextBox({
     end
 })
 
+
+local function safeLoad(url, name)
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet(url))
+    end)
+
+    if not success then
+        warn("Erreur lors du chargement de '" .. name .. "': " .. tostring(result))
+        return
+    end
+
+    local success, err = pcall(result)
+    if not success then
+        warn("Erreur lors de l'exécution de '" .. name .. "': " .. tostring(err))
+    else
+        print("Script '" .. name .. "' chargé avec succès.")
+    end
+end
+
+-- Création de l'onglet Mada Script
+local MadaScriptTab = Window:MakeTab({
+    Title = "Mada Script", -- Utilisation de 'Title' au lieu d'une table
+    Icon = "home"         -- Utilisation de 'Icon' au lieu d'une table
+})
+MadaScriptTab:AddSection({
+    Title = "Mada Script Scripts" -- Utilisation de 'Title' au lieu d'une table
+})
+
+MadaScriptTab:AddButton({
+    Name = "⚡ KOLINSKI admin FE",
+    Description = "Loads KOLINSKI admin FE script",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/Jfdedit3/KOLINSKI/refs/heads/main/KOLINSKI.lua", "KOLINSKI Admin") -- URL corrigée
+    end
+})
+
+MadaScriptTab:AddButton({
+    Name = "👑 Mada Admin",
+    Description = "Loads Mada Admin script",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/Jfdedit3/Nameless-admin/refs/heads/main/Source", "Mada Admin") -- URL corrigée
+    end
+})
+
+MadaScriptTab:AddButton({
+    Name = "🎵 Nameless music",
+    Description = "Loads Nameless music script",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/Jfdedit3/Nameless-music-lunch/refs/heads/main/Main", "Nameless Music") -- URL corrigée
+    end
+})
+
+MadaScriptTab:AddButton({
+    Name = "⚡ Mada Jims rng",
+    Description = "Execute Mada Jims rng script",
+    Callback = function()
+        safeLoad("https://api.websim.com/blobs/0198f1b6-61d5-722a-a1a2-54553ac4f64e.txt", "Mada Jims RNG") -- URL corrigée
+    end
+})
+
+-- Création de l'onglet Musique
+local MusicTab = Window:MakeTab({
+    Title = "Music", -- Utilisation de 'Title' au lieu d'une table
+    Icon = "music"   -- Utilisation de 'Icon' au lieu d'une table
+})
+local sound = Instance.new("Sound", game.Workspace)
+
+MusicTab:AddTextBox({
+    Name = "Music ID Input",
+    Description = "Enter a music ID to play",
+    PlaceholderText = "Music ID",
+    Callback = function(val)
+        if val ~= "" then
+            local num = tonumber(val)
+            -- Vérifier que c'est un nombre, entier et positif
+            if num and num > 0 and math.floor(num) == num then
+                sound:Stop()
+                sound.SoundId = "rbxassetid://" .. num
+                sound.Looped = false
+                local success, err = pcall(function()
+                    sound:Play()
+                end)
+                if not success then
+                    warn("Erreur de lecture du son:", err)
+                end
+            else
+                 warn("ID de musique invalide. Veuillez entrer un nombre entier positif.")
+            end
+        end
+    end
+})
+
+local presets = {"107764433772204", "16662830706", "1836142077", "112723885774179", "81902909302285"}
+for _, id in ipairs(presets) do
+    MusicTab:AddButton({
+        Name = "Play " .. id,
+        Description = "Play preset music",
+        Callback = function()
+            sound:Stop()
+            sound.SoundId = "rbxassetid://" .. id
+            sound.Looped = false
+            local success, err = pcall(function()
+                sound:Play()
+            end)
+            if not success then
+                warn("Erreur de lecture du son:", err)
+            end
+        end
+    })
+end
+
+-- Ajout de l'onglet Brook Music
+local BrookMusicTab = Window:MakeTab({
+    Title = "Brook Music",
+    Icon = "music"
+})
+
+-- Bouton pour Spawn un Skateboard
+BrookMusicTab:AddButton({
+    Name = "Skate",
+    Description = "Spawns a Skateboard",
+    Callback = function()
+        local args = {[1] = "SkateBoard"}
+        local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+        if RE then
+            local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+            if event then
+                event:FireServer(unpack(args))
+            end
+        end
+    end
+})
+
+-- Bouton pour Spawn un SegwaySmall (Overboard) - CORRIGÉ
+BrookMusicTab:AddButton({
+    Name = "Overboard",
+    Description = "Spawns a SegwaySmall",
+    Callback = function()
+        local args = {[1] = "SegwaySmall"}
+        local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+        if RE then
+            local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+            if event then
+                event:FireServer(unpack(args))
+            end -- Fin du 'if event then'
+        end -- Fin du 'if RE then'
+    end
+})
+
+-- Zone de texte pour entrer l'ID de la musique pour le Skateboard/Segway
+BrookMusicTab:AddTextBox({
+    Name = "Overboard Music",
+    Description = "Enter Music ID for Overboard/Skate",
+    PlaceholderText = "Overboard/Skate Music ID",
+    Callback = function(val)
+        if val ~= "" then
+            local num = tonumber(val)
+            if num then
+                local args = {[1] = "PickingScooterMusicText", [2] = val}
+                local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+                if RE then
+                    local event = RE:FindFirstChild("1NoMoto1rVehicle1s") -- Utilise le même RE pour les véhicules non motorisés
+                    if event then
+                        event:FireServer(unpack(args))
+                    end
+                end
+            end
+        end
+    end
+})
+
+-- Zone de texte pour entrer l'ID de la musique pour la maison
+BrookMusicTab:AddTextBox({
+    Name = "House Music",
+    Description = "Enter Music ID for House",
+    PlaceholderText = "House Music ID",
+    Callback = function(val)
+        if val ~= "" then
+            local num = tonumber(val)
+            if num then
+                local args = {[1] = "PickHouseMusicText", [2] = val}
+                local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+                if RE then
+                    local event = RE:FindFirstChild("1Player1sHous1e") -- Utilise le RE pour les maisons
+                    if event then
+                        event:FireServer(unpack(args))
+                    end
+                end
+            end
+        end
+    end
+})
+
 local TrollTab = Window:MakeTab({ Title = "Scripts Trolls", Icon = "rbxassetid://13364900349" })
 
 
@@ -9246,5 +9439,6 @@ ToolsTab:AddButton({
                 end
     end
 })
+
 
 
