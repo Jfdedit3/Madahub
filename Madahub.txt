@@ -17,8 +17,10 @@ local InfoTab = Window:MakeTab({ Title = "Info", Icon = "rbxassetid://7785543434
 
 
 InfoTab:AddSection({ "Script Information" })
-InfoTab:AddParagraph({ "Owner / Developer:", "Mada." })
-InfoTab:AddParagraph({ "Are you using?:", "Mada hub Brookhaven " })
+InfoTab:AddParagraph({ "Owner / Developer:", "Mada" })
+InfoTab:AddParagraph({ "My acc", "z4trox1 (Roblox)" })
+InfoTab:AddParagraph({ "Origine:", "French script" })
+InfoTab:AddParagraph({ "Friends :", "Akxii" })
 local name, version = identifyexecutor()
 InfoTab:AddParagraph({ "Your executor:", tostring(name .. " " .. (version or "")) })
 
