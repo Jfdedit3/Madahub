@@ -35,149 +35,8 @@ InfoTab:AddButton({
     end
 })
 
-local MainCheatsTab = Window:MakeTab({"Universal Exploits", "bug"})
-
--- Section Speed Hacks
-MainCheatsTab:AddSection({"Speed Hacks"})
-local SpeedToggle = MainCheatsTab:AddToggle({Name = "Enable Speed Hack", Description = "Toggle WalkSpeed", Default = false})
-SpeedToggle:Callback(function(val)
-    speedEnabled = val
-    updateSpeed()
-end)
-
-local SpeedTextBox = MainCheatsTab:AddTextBox({
-    Name = "Speed Modifier",
-    Description = "Set custom WalkSpeed (0-500)",
-    PlaceholderText = "Enter speed value",
-    Callback = function(val)
-        local num = tonumber(val)
-        if num and num >= MIN_SPEED and num <= MAX_SPEED then
-            customSpeed = num
-            if speedEnabled then updateSpeed() end
-        end
-    end
-})
-
--- Section JumpPower Hacks
-MainCheatsTab:AddSection({"JumpPower Hacks"})
-local JumpToggle = MainCheatsTab:AddToggle({Name = "Enable Jump Hack", Description = "Toggle JumpPower", Default = false})
-JumpToggle:Callback(function(val)
-    jumpEnabled = val
-    updateJump()
-end)
-
-local JumpTextBox = MainCheatsTab:AddTextBox({
-    Name = "JumpPower Modifier",
-    Description = "Set custom JumpPower (0-200)",
-    PlaceholderText = "Enter jump value",
-    Callback = function(val)
-        local num = tonumber(val)
-        if num and num >= MIN_JUMP and num <= MAX_JUMP then
-            customJump = num
-            if jumpEnabled then updateJump() end
-        end
-    end
-})
-
--- Section Gravity Hacks
-MainCheatsTab:AddSection({"Gravity Hacks"})
-local GravityToggle = MainCheatsTab:AddToggle({Name = "Enable Gravity Hack", Description = "Toggle Workspace.Gravity", Default = false})
-GravityToggle:Callback(function(val)
-    gravityEnabled = val
-    updateGravity()
-end)
-
-local GravityTextBox = MainCheatsTab:AddTextBox({
-    Name = "Gravity Modifier",
-    Description = "Set custom Gravity (0-1000)",
-    PlaceholderText = "Enter gravity value",
-    Callback = function(val)
-        local num = tonumber(val)
-        if num and num >= MIN_GRAVITY and num <= MAX_GRAVITY then
-            customGravity = num
-            if gravityEnabled then updateGravity() end
-        end
-    end
-})
-
--- Section Infinite Jump
-MainCheatsTab:AddSection({"Infinite Jump"})
-local InfiniteJumpToggle = MainCheatsTab:AddToggle({Name = "Enable Infinite Jump", Description = "Toggle Infinite Jump", Default = false})
-InfiniteJumpToggle:Callback(function(val)
-    infiniteJumpEnabled = val
-    if val then
-        if not connections.infiniteJump then
-            connections.infiniteJump = game:GetService("UserInputService").JumpRequest:Connect(function()
-                if infiniteJumpEnabled then
-                    local character = getPlayerCharacter()
-                    local humanoid = getHumanoid(character)
-                    if humanoid then
-                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                    end
-                end
-            end)
-        end
-    else
-        if connections.infiniteJump then
-            connections.infiniteJump:Disconnect()
-            connections.infiniteJump = nil
-        end
-    end
-end)
-
--- Section Health Hacks
-MainCheatsTab:AddSection({"Health Hacks"})
-local HealthToggle = MainCheatsTab:AddToggle({Name = "Enable Health Hack", Description = "Toggle MaxHealth", Default = false})
-HealthToggle:Callback(function(val)
-    healthEnabled = val
-    updateHealth()
-end)
-
-local HealthTextBox = MainCheatsTab:AddTextBox({
-    Name = "Health Modifier",
-    Description = "Set custom MaxHealth (1-10000)",
-    PlaceholderText = "Enter health value",
-    Callback = function(val)
-        local num = tonumber(val)
-        if num and num >= MIN_HEALTH and num <= MAX_HEALTH then
-            customHealth = num
-            if healthEnabled then updateHealth() end
-        end
-    end
-})
-
--- Bouton Reset All Stats
-MainCheatsTab:AddButton({
-    Name = "Reset All Stats",
-    Description = "Reset speed, jump, gravity, and health to defaults",
-    Callback = function()
-        speedEnabled = false
-        jumpEnabled = false
-        gravityEnabled = false
-        healthEnabled = false
-        customSpeed = DEFAULT_SPEED
-        customJump = DEFAULT_JUMP
-        customGravity = DEFAULT_GRAVITY
-        customHealth = DEFAULT_HEALTH
-
-        SpeedToggle:Set(false)
-        JumpToggle:Set(false)
-        GravityToggle:Set(false)
-        HealthToggle:Set(false)
-        SpeedTextBox:Set(tostring(DEFAULT_SPEED))
-        JumpTextBox:Set(tostring(DEFAULT_JUMP))
-        GravityTextBox:Set(tostring(DEFAULT_GRAVITY))
-        HealthTextBox:Set(tostring(DEFAULT_HEALTH))
-
-        updateSpeed()
-        updateJump()
-        updateGravity()
-        updateHealth()
-    end
-})
-
 -- Section Anti-AFK
-MainCheatsTab:AddSection({"Anti-AFK"})
+InfoTab:AddSection({"Anti-AFK"})
 local AFKToggle = MainCheatsTab:AddToggle({Name = "Enable Anti-AFK", Description = "Prevent idle kick", Default = false})
 AFKToggle:Callback(function(val)
     afkEnabled = val
@@ -9603,6 +9462,7 @@ ToolsTab:AddButton({
                 end
     end
 })
+
 
 
 
