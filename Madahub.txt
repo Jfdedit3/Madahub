@@ -37,7 +37,7 @@ InfoTab:AddButton({
 
 -- Section Anti-AFK
 InfoTab:AddSection({"Anti-AFK"})
-local AFKToggle = MainCheatsTab:AddToggle({Name = "Enable Anti-AFK", Description = "Prevent idle kick", Default = false})
+local AFKToggle = InfoTab:AddToggle({Name = "Enable Anti-AFK", Description = "Prevent idle kick", Default = false})
 AFKToggle:Callback(function(val)
     afkEnabled = val
     if val then
@@ -9462,6 +9462,7 @@ ToolsTab:AddButton({
                 end
     end
 })
+
 
 
 
