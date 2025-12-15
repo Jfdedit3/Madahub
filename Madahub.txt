@@ -35,6 +35,33 @@ InfoTab:AddButton({
     end
 })
 
+local afkEnabled = false
+
+-- Section Anti-AFK
+local AFKToggle = InfoTab:AddToggle({
+    Name = "Enable Anti-AFK",
+    Description = "Prevent idle kick",
+    Default = false
+})
+
+AFKToggle:Callback(function(val)
+    afkEnabled = val
+    if val then
+        if not connections.afk then
+            local VirtualUser = game:GetService("VirtualUser")
+            connections.afk = game.Players.LocalPlayer.Idled:Connect(function()
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton2(Vector2.new())
+            end)
+        end
+    else
+        if connections.afk then
+            connections.afk:Disconnect()
+            connections.afk = nil
+        end
+    end
+end)
+
 local BrookMusicTab = Window:MakeTab({
     Title = "Brook Music",
     Icon = "music"
