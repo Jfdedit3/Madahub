@@ -74,8 +74,8 @@ local function isValidMusicId(value)
 end
 
 Tab8:AddTextBox({
-    Name = "ID da música",
-    PlaceholderText = "Digite o ID e pressione Enter",
+    Name = "ID music",
+    PlaceholderText = "Enter id",
     Callback = function(value)
         if value and value ~= "" then
             tocarMusica(tostring(value))
@@ -9758,6 +9758,7 @@ ToolsTab:AddButton({
                 end
     end
 })
+
 
 
 
