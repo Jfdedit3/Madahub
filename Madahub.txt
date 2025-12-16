@@ -174,7 +174,7 @@ MadaScriptTab:AddButton({
 
 -- Création de l'onglet Musique
 local MusicTab = Window:MakeTab({
-    Title = "Music", -- Utilisation de 'Title' au lieu d'une table
+    Title = "Music fe", -- Utilisation de 'Title' au lieu d'une table
     Icon = "music"   -- Utilisation de 'Icon' au lieu d'une table
 })
 local sound = Instance.new("Sound", game.Workspace)
@@ -9441,6 +9441,7 @@ ToolsTab:AddButton({
                 end
     end
 })
+
 
 
 
