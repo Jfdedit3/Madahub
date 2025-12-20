@@ -350,6 +350,86 @@ Tab8:AddButton({
     end
 })
 
+
+
+local BrookMusicTab = Window:MakeTab({
+    Title = "Brook Music",
+    Icon = "music"
+})
+
+BrookMusicTab:AddButton({
+    Name = "Skate",
+    Description = "Spawns a Skateboard",
+    Callback = function()
+        local args = {[1] = "SkateBoard"}
+        local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+        if RE then
+            local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+            if event then
+                event:FireServer(unpack(args))
+            end
+        end
+    end
+})
+
+BrookMusicTab:AddButton({
+    Name = "Overboard",
+    Description = "Spawns a SegwaySmall",
+    Callback = function()
+        local args = {[1] = "SegwaySmall"}
+        local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+        if RE then
+            local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+            if event then
+                event:FireServer(unpack(args))
+            end
+        end
+    end
+})
+
+BrookMusicTab:AddTextBox({
+    Name = "Overboard Music",
+    Description = "Enter Music ID for Overboard/Skate",
+    PlaceholderText = "Overboard/Skate Music ID",
+    Callback = function(val)
+        if val ~= "" then
+            local num = tonumber(val)
+            if num then
+                local args = {[1] = "PickingScooterMusicText", [2] = val}
+                local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+                if RE then
+                    local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+                    if event then
+                        event:FireServer(unpack(args))
+                    end
+                end
+            end
+        end
+    end
+})
+
+BrookMusicTab:AddTextBox({
+    Name = "House Music",
+    Description = "Enter Music ID for House",
+    PlaceholderText = "House Music ID",
+    Callback = function(val)
+        if val ~= "" then
+            local num = tonumber(val)
+            if num then
+                local args = {[1] = "PickHouseMusicText", [2] = val}
+                local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+                if RE then
+                    local event = RE:FindFirstChild("1Player1sHous1e")
+                    if event then
+                        event:FireServer(unpack(args))
+                    end
+                end
+            end
+        end
+    end
+})
+
+
 local function safeLoad(url, name)
     local success, result = pcall(function()
         return loadstring(game:HttpGet(url))
@@ -407,36 +487,6 @@ local MusicTab = Window:MakeTab({
     Icon = "music"   -- Utilisation de 'Icon' au lieu d'une table
 })
 local sound = Instance.new("Sound", game.Workspace)
-
-MusicTab:AddButton({
-    Name = "Skate",
-    Description = "Spawns a Skateboard",
-    Callback = function()
-        local args = {[1] = "SkateBoard"}
-        local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
-        if RE then
-            local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
-            if event then
-                event:FireServer(unpack(args))
-            end
-        end
-    end
-})
-
-MusicTab:AddButton({
-    Name = "Overboard",
-    Description = "Spawns a SegwaySmall",
-    Callback = function()
-        local args = {[1] = "SegwaySmall"}
-        local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
-        if RE then
-            local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
-            if event then
-                event:FireServer(unpack(args))
-            end
-        end
-    end
-})
 
 MusicTab:AddTextBox({
     Name = "Music ID Input",
