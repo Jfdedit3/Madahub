@@ -487,7 +487,7 @@ MadaScriptTab:AddButton({
 
 MadaScriptTab:AddButton({
     Name = "⚡ Mada hub jims rng,
-    Description = "Loads Mada hub jims rng",
+    Description = "Loads KOLINSKI admin FE script",
     Callback = function()
         safeLoad("https://pastebin.com/raw/0ADPHjNE", "Mada hub jims rng") -- URL corrigée
     end
