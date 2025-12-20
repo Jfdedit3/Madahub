@@ -504,6 +504,14 @@ MadaScriptTab:AddButton({
     end
 })
 
+MadaScriptTab:AddButton({
+    Name = "⚡ Mada hub jims rng,
+    Description = "Loads KOLINSKI admin FE script",
+    Callback = function()
+        safeLoad("https://pastebin.com/raw/0ADPHjNE", "Mada hub jims rng") -- URL corrigée
+    end
+})
+
 -- Création de l'onglet Musique
 local MusicTab = Window:MakeTab({
     Title = "Music fe", -- Utilisation de 'Title' au lieu d'une table
