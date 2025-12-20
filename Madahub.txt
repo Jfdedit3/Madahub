@@ -73,6 +73,8 @@ local function isValidMusicId(value)
     return value and value ~= "" and value ~= "Option 1" and not value:match("novas musica adds") and not value:match("musica brasil") and not value:match("musica do meu interece") and not value:match("musica dls por elas") and not value:match("meme abaixo") and not value:match("estourada")
 end
 
+local Paragraph = Tab8:AddParagraph({"Paragraph", "This is a Paragraph\nSecond Line"})
+
 Tab8:AddTextBox({
     Name = "ID music",
     PlaceholderText = "Enter id",
