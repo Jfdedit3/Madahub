@@ -1,22 +1,3 @@
-local link = "https://discord.gg/Ym3wxg7uVG"
-
-if setclipboard then
-    setclipboard(link)
-    warn("Link copied to clipboard via setclipboard!")
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Discord Link Copied";
-        Text = "The Discord invite link has been copied to your clipboard!";
-        Duration = 10;
-    })
-else
-    warn("setclipboard not available. Use a compatible exploit.")
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Clipboard Error";
-        Text = "setclipboard is not available. Please use an exploit compatible with this function.";
-        Duration = 10;
-    })
-end
-
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Mada-ui/refs/heads/main/Madzhubui"))()
 workspace.FallenPartsDestroyHeight = -math.huge
 
