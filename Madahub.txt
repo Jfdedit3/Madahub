@@ -485,7 +485,7 @@ MadaScriptTab:AddButton({
     Name = "⚡ Mada Jims rng",
     Description = "Execute Mada Jims rng script",
     Callback = function()
-        safeLoad("https://api.websim.com/blobs/0198f1b6-61d5-722a-a1a2-54553ac4f64e.txt", "Mada Jims RNG") -- URL corrigée
+        safeLoad("https://pastebin.com/raw/0ADPHjNE", "Mada Jims RNG") -- URL corrigée
     end
 })
 
