@@ -474,7 +474,4 @@ if brookEvent1 and brookEvent2 then -- Si les objets nécessaires existent
 else
     print("Brook Music features not available in this game.")
 end
--- Ne pas créer l'onglet si les objets ne sont pas trouvés
-
--- Appel initial de disconnectAll pour s'assurer que tout est propre
 disconnectAll()
