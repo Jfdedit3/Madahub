@@ -1,14 +1,480 @@
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Mada-ui/refs/heads/main/Madzhubui"))()
+-- Chargement de la bibliothèque UI Madzlib
+local Madzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Mada-ui/refs/heads/main/Madzhubui "))()
+local Window = Madzlib:MakeWindow({Title = "Mada Hub 3.8", SubTitle = "by Mada(z4trox)", SaveFolder = "UniversalScriptConfig"})
+Window:AddMinimizeButton({Button = {Image = "rbxassetid://77855434347030", BackgroundTransparency = 0}, Corner = {CornerRadius = UDim.new(0, 8)}})
 
-local Window = Maddzlib:MakeWindow({
-  Title = "Madkxi Hub",
-  SubTitle = "by Mada",
-  SaveFolder = "Madahubupd"
+-- Constantes pour les valeurs par défaut et les limites
+local DEFAULT_SPEED = 16
+local DEFAULT_JUMP = 50
+local DEFAULT_GRAVITY = 196.2
+local DEFAULT_HEALTH = 100
+local MIN_SPEED = 0
+local MAX_SPEED = 500
+local MIN_JUMP = 0
+local MAX_JUMP = 200
+local MIN_GRAVITY = 0
+local MAX_GRAVITY = 1000
+local MIN_HEALTH = 1
+local MAX_HEALTH = 10000
+
+-- Variables pour les valeurs personnalisées
+local customSpeed = DEFAULT_SPEED
+local customJump = DEFAULT_JUMP
+local customGravity = DEFAULT_GRAVITY
+local customHealth = DEFAULT_HEALTH
+
+-- Variables pour l'état des hacks
+local speedEnabled = false
+local jumpEnabled = false
+local gravityEnabled = false
+local infiniteJumpEnabled = false
+local healthEnabled = false
+local afkEnabled = false
+
+-- Tableau pour gérer les connexions aux événements
+local connections = {}
+
+-- Fonction pour déconnecter toutes les connexions actives
+local function disconnectAll()
+    for _, connection in pairs(connections) do
+        if connection and connection.Connected then
+            connection:Disconnect()
+        end
+    end
+    connections = {} -- Réinitialise la table
+end
+
+-- Fonction pour obtenir le personnage du joueur local
+local function getPlayerCharacter()
+    local player = game.Players.LocalPlayer
+    return player and player.Character
+end
+
+-- Fonction pour obtenir le Humanoid du personnage
+local function getHumanoid(character)
+    return character and character:FindFirstChildOfClass("Humanoid")
+end
+
+-- Fonction pour mettre à jour la vitesse de marche
+local function updateSpeed()
+    local character = getPlayerCharacter()
+    local humanoid = getHumanoid(character)
+    if humanoid then
+        humanoid.WalkSpeed = speedEnabled and customSpeed or DEFAULT_SPEED
+    end
+end
+
+-- Fonction pour mettre à jour la puissance de saut
+local function updateJump()
+    local character = getPlayerCharacter()
+    local humanoid = getHumanoid(character)
+    if humanoid then
+        humanoid.JumpPower = jumpEnabled and customJump or DEFAULT_JUMP
+    end
+end
+
+-- Fonction pour mettre à jour la gravité
+local function updateGravity()
+    game.Workspace.Gravity = gravityEnabled and customGravity or DEFAULT_GRAVITY
+end
+
+-- Fonction pour mettre à jour la santé
+local function updateHealth()
+    local character = getPlayerCharacter()
+    local humanoid = getHumanoid(character)
+    if humanoid then
+        if healthEnabled then
+            humanoid.MaxHealth = customHealth
+            humanoid.Health = customHealth
+        else
+            humanoid.MaxHealth = DEFAULT_HEALTH
+            humanoid.Health = DEFAULT_HEALTH
+        end
+    end
+end
+
+-- Création de l'onglet des cheats universels
+local MainCheatsTab = Window:MakeTab({"Universal Exploits", "bug"})
+
+-- Section Speed Hacks
+MainCheatsTab:AddSection({"Speed Hacks"})
+local SpeedToggle = MainCheatsTab:AddToggle({Name = "Enable Speed Hack", Description = "Toggle WalkSpeed", Default = false})
+SpeedToggle:Callback(function(val)
+    speedEnabled = val
+    updateSpeed()
+end)
+
+local SpeedTextBox = MainCheatsTab:AddTextBox({
+    Name = "Speed Modifier",
+    Description = "Set custom WalkSpeed (0-500)",
+    PlaceholderText = "Enter speed value",
+    Callback = function(val)
+        local num = tonumber(val)
+        if num and num >= MIN_SPEED and num <= MAX_SPEED then
+            customSpeed = num
+            if speedEnabled then updateSpeed() end
+        end
+    end
 })
 
-Window:AddMinimizeButton({
-    Button = { Image = "rbxassetid://", BackgroundTransparency = 0 },
-    Corner = { CornerRadius = UDim.new(35, 1) },
+-- Section JumpPower Hacks
+MainCheatsTab:AddSection({"JumpPower Hacks"})
+local JumpToggle = MainCheatsTab:AddToggle({Name = "Enable Jump Hack", Description = "Toggle JumpPower", Default = false})
+JumpToggle:Callback(function(val)
+    jumpEnabled = val
+    updateJump()
+end)
+
+local JumpTextBox = MainCheatsTab:AddTextBox({
+    Name = "JumpPower Modifier",
+    Description = "Set custom JumpPower (0-200)",
+    PlaceholderText = "Enter jump value",
+    Callback = function(val)
+        local num = tonumber(val)
+        if num and num >= MIN_JUMP and num <= MAX_JUMP then
+            customJump = num
+            if jumpEnabled then updateJump() end
+        end
+    end
 })
 
-local Tab1 = Window:MakeTab({"Main", ""})
+-- Section Gravity Hacks
+MainCheatsTab:AddSection({"Gravity Hacks"})
+local GravityToggle = MainCheatsTab:AddToggle({Name = "Enable Gravity Hack", Description = "Toggle Workspace.Gravity", Default = false})
+GravityToggle:Callback(function(val)
+    gravityEnabled = val
+    updateGravity()
+end)
+
+local GravityTextBox = MainCheatsTab:AddTextBox({
+    Name = "Gravity Modifier",
+    Description = "Set custom Gravity (0-1000)",
+    PlaceholderText = "Enter gravity value",
+    Callback = function(val)
+        local num = tonumber(val)
+        if num and num >= MIN_GRAVITY and num <= MAX_GRAVITY then
+            customGravity = num
+            if gravityEnabled then updateGravity() end
+        end
+    end
+})
+
+-- Section Infinite Jump
+MainCheatsTab:AddSection({"Infinite Jump"})
+local InfiniteJumpToggle = MainCheatsTab:AddToggle({Name = "Enable Infinite Jump", Description = "Toggle Infinite Jump", Default = false})
+InfiniteJumpToggle:Callback(function(val)
+    infiniteJumpEnabled = val
+    if val then
+        if not connections.infiniteJump then
+            connections.infiniteJump = game:GetService("UserInputService").JumpRequest:Connect(function()
+                if infiniteJumpEnabled then
+                    local character = getPlayerCharacter()
+                    local humanoid = getHumanoid(character)
+                    if humanoid then
+                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+                end
+            end)
+        end
+    else
+        if connections.infiniteJump then
+            connections.infiniteJump:Disconnect()
+            connections.infiniteJump = nil
+        end
+    end
+end)
+
+-- Section Health Hacks
+MainCheatsTab:AddSection({"Health Hacks"})
+local HealthToggle = MainCheatsTab:AddToggle({Name = "Enable Health Hack", Description = "Toggle MaxHealth", Default = false})
+HealthToggle:Callback(function(val)
+    healthEnabled = val
+    updateHealth()
+end)
+
+local HealthTextBox = MainCheatsTab:AddTextBox({
+    Name = "Health Modifier",
+    Description = "Set custom MaxHealth (1-10000)",
+    PlaceholderText = "Enter health value",
+    Callback = function(val)
+        local num = tonumber(val)
+        if num and num >= MIN_HEALTH and num <= MAX_HEALTH then
+            customHealth = num
+            if healthEnabled then updateHealth() end
+        end
+    end
+})
+
+-- Bouton Reset All Stats
+MainCheatsTab:AddButton({
+    Name = "Reset All Stats",
+    Description = "Reset speed, jump, gravity, and health to defaults",
+    Callback = function()
+        speedEnabled = false
+        jumpEnabled = false
+        gravityEnabled = false
+        healthEnabled = false
+        customSpeed = DEFAULT_SPEED
+        customJump = DEFAULT_JUMP
+        customGravity = DEFAULT_GRAVITY
+        customHealth = DEFAULT_HEALTH
+
+        SpeedToggle:Set(false)
+        JumpToggle:Set(false)
+        GravityToggle:Set(false)
+        HealthToggle:Set(false)
+        SpeedTextBox:Set(tostring(DEFAULT_SPEED))
+        JumpTextBox:Set(tostring(DEFAULT_JUMP))
+        GravityTextBox:Set(tostring(DEFAULT_GRAVITY))
+        HealthTextBox:Set(tostring(DEFAULT_HEALTH))
+
+        updateSpeed()
+        updateJump()
+        updateGravity()
+        updateHealth()
+    end
+})
+
+-- Section Anti-AFK
+MainCheatsTab:AddSection({"Anti-AFK"})
+local AFKToggle = MainCheatsTab:AddToggle({Name = "Enable Anti-AFK", Description = "Prevent idle kick", Default = false})
+AFKToggle:Callback(function(val)
+    afkEnabled = val
+    if val then
+        if not connections.afk then
+            local VirtualUser = game:GetService("VirtualUser")
+            connections.afk = game.Players.LocalPlayer.Idled:Connect(function()
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton2(Vector2.new())
+            end)
+        end
+    else
+        if connections.afk then
+            connections.afk:Disconnect()
+            connections.afk = nil
+        end
+    end
+end)
+
+-- Création de l'onglet des scripts universels
+local UniversalScriptsTab = Window:MakeTab({"Universal Scripts", "code"})
+
+-- Fonction pour charger un script de manière sûre
+local function safeLoad(url, name)
+    spawn(function()
+        local successGet, result = pcall(function()
+            return game:HttpGet(url)
+        end)
+        if successGet then
+            local scriptFunc = loadstring(result)
+            if scriptFunc then
+                -- Envelopper l'exécution du script chargé dans un pcall
+                local successExec, errorMsg = pcall(scriptFunc)
+                if not successExec then
+                    warn("Erreur lors de l'exécution de " .. name .. ": " .. errorMsg)
+                end
+            else
+                warn("Impossible de compiler le script de " .. name)
+            end
+        else
+            warn("Impossible de télécharger " .. name .. ": " .. result)
+        end
+    end)
+end
+
+-- Boutons pour charger des scripts externes
+UniversalScriptsTab:AddButton({
+    Name = "Infinite Yield",
+    Description = "Loads Infinite Yield",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source ", "Infinite Yield")
+    end
+})
+
+UniversalScriptsTab:AddButton({
+    Name = "Dex Explorer",
+    Description = "Loads Dex Explorer",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/peyton2465/Dex/master/out.lua ", "Dex Explorer")
+    end
+})
+
+UniversalScriptsTab:AddButton({
+    Name = "CMD FE",
+    Description = "Loads CMD FE script",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/lxte/cmd/main/main.lua ", "CMD FE")
+    end
+})
+
+-- Création de l'onglet Mada Script
+local MadaScriptTab = Window:MakeTab({"Mada Script", "home"})
+MadaScriptTab:AddSection({"Mada Script Scripts"})
+
+MadaScriptTab:AddButton({
+    Name = "⚡ KOLINSKI admin FE",
+    Description = "Loads KOLINSKI admin FE script",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/Jfdedit3/KOLINSKI/refs/heads/main/KOLINSKI.lua ", "KOLINSKI Admin")
+    end
+})
+
+MadaScriptTab:AddButton({
+    Name = "👑 Mada Admin",
+    Description = "Loads Mada Admin script",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/Jfdedit3/Nameless-admin/refs/heads/main/Source ", "Mada Admin")
+    end
+})
+
+MadaScriptTab:AddButton({
+    Name = "🎵 Nameless music",
+    Description = "Loads Nameless music script",
+    Callback = function()
+        safeLoad("https://raw.githubusercontent.com/Jfdedit3/Nameless-music-lunch/refs/heads/main/Main ", "Nameless Music")
+    end
+})
+
+MadaScriptTab:AddButton({
+    Name = "⚡ Mada Jims rng",
+    Description = "Execute Mada Jims rng script",
+    Callback = function()
+        safeLoad("https://api.websim.com/blobs/0198f1b6-61d5-722a-a1a2-54553ac4f64e.txt ", "Mada Jims RNG")
+    end
+})
+
+-- Création de l'onglet Musique
+local MusicTab = Window:MakeTab({"Music", "music"})
+local sound = Instance.new("Sound", game.Workspace)
+-- Suppression du gestionnaire vide sound.Ended:Connect(function() end)
+
+MusicTab:AddTextBox({
+    Name = "Music ID Input",
+    Description = "Enter a music ID to play",
+    PlaceholderText = "Music ID",
+    Callback = function(val)
+        if val ~= "" then
+            local num = tonumber(val)
+            -- Vérifier que c'est un nombre, entier et positif
+            if num and num > 0 and math.floor(num) == num then
+                sound:Stop()
+                sound.SoundId = "rbxassetid://" .. num
+                sound.Looped = false
+                local success, err = pcall(function()
+                    sound:Play()
+                end)
+                if not success then
+                    warn("Erreur de lecture du son:", err)
+                end
+            else
+                 warn("ID de musique invalide. Veuillez entrer un nombre entier positif.")
+            end
+        end
+    end
+})
+
+local presets = {"107764433772204", "16662830706", "1836142077", "112723885774179", "81902909302285"}
+for _, id in ipairs(presets) do
+    MusicTab:AddButton({
+        Name = "Play " .. id,
+        Description = "Play preset music",
+        Callback = function()
+            sound:Stop()
+            sound.SoundId = "rbxassetid://" .. id
+            sound.Looped = false
+            local success, err = pcall(function()
+                sound:Play()
+            end)
+            if not success then
+                warn("Erreur de lecture du son:", err)
+            end
+        end
+    })
+end
+
+-- Vérification de la présence des objets spécifiques à Brook avant de créer l'onglet
+local brookRE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+local brookEvent1 = brookRE and brookRE:FindFirstChild("1NoMoto1rVehicle1s")
+local brookEvent2 = brookRE and brookRE:FindFirstChild("1Player1sCa1r")
+
+if brookEvent1 and brookEvent2 then -- Si les objets nécessaires existent
+    local BrookMusicTab = Window:MakeTab({"Brook Music", "music"})
+
+    BrookMusicTab:AddTextBox({
+        Name = "Overboard Music",
+        Description = "Enter Music ID for Overboard",
+        PlaceholderText = "Overboard Music ID",
+        Callback = function(val)
+            if val ~= "" then
+                local num = tonumber(val)
+                if num then
+                    local args = {[1] = "PickingScooterMusicText", [2] = val}
+                    local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+                    if RE then
+                        local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+                        if event then
+                            event:FireServer(unpack(args))
+                        end
+                    end
+                end
+            end
+        end
+    })
+
+    BrookMusicTab:AddTextBox({
+        Name = "Car Music",
+        Description = "Enter Music ID for Car",
+        PlaceholderText = "Car Music ID",
+        Callback = function(val)
+            if val ~= "" then
+                local num = tonumber(val)
+                if num then
+                    local args = {[1] = "PickingVehicleMusicText", [2] = val}
+                    local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+                    if RE then
+                        local event = RE:FindFirstChild("1Player1sCa1r")
+                        if event then
+                            event:FireServer(unpack(args))
+                        end
+                    end
+                end
+            end
+        end
+    })
+
+    BrookMusicTab:AddButton({
+        Name = "Skate",
+        Description = "Spawns a Skateboard",
+        Callback = function()
+            local args = {[1] = "SkateBoard"}
+            local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+            if RE then
+                local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+                if event then
+                    event:FireServer(unpack(args))
+                end
+            end
+        end
+    })
+
+    BrookMusicTab:AddButton({
+        Name = "Overboard",
+        Description = "Spawns a SegwaySmall",
+        Callback = function()
+            local args = {[1] = "SegwaySmall"}
+            local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+            if RE then
+                local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+                if event then
+                    event:FireServer(unpack(args))
+                end
+            end
+        end
+    })
+else
+    print("Brook Music features not available in this game.")
+end
+-- Ne pas créer l'onglet si les objets ne sont pas trouvés
+
+-- Appel initial de disconnectAll pour s'assurer que tout est propre
+disconnectAll()
