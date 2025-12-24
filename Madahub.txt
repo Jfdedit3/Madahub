@@ -344,7 +344,7 @@ MadaScriptTab:AddButton({
 })
 
 -- Création de l'onglet Musique
-local MusicTab = Window:MakeTab({"Music", "music"})
+local MusicTab = Window:MakeTab({"Music fe", "music"})
 local sound = Instance.new("Sound", game.Workspace)
 -- Suppression du gestionnaire vide sound.Ended:Connect(function() end)
 
@@ -397,85 +397,8 @@ local brookRE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
 local brookEvent1 = brookRE and brookRE:FindFirstChild("1NoMoto1rVehicle1s")
 local brookEvent2 = brookRE and brookRE:FindFirstChild("1Player1sCa1r")
 
-if brookEvent1 and brookEvent2 then -- Si les objets nécessaires existent
-    local BrookMusicTab = Window:MakeTab({"Brook Music", "music"})
-
-    BrookMusicTab:AddTextBox({
-        Name = "Overboard Music",
-        Description = "Enter Music ID for Overboard",
-        PlaceholderText = "Overboard Music ID",
-        Callback = function(val)
-            if val ~= "" then
-                local num = tonumber(val)
-                if num then
-                    local args = {[1] = "PickingScooterMusicText", [2] = val}
-                    local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
-                    if RE then
-                        local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
-                        if event then
-                            event:FireServer(unpack(args))
-                        end
-                    end
-                end
-            end
-        end
-    })
-
-    BrookMusicTab:AddTextBox({
-        Name = "Car Music",
-        Description = "Enter Music ID for Car",
-        PlaceholderText = "Car Music ID",
-        Callback = function(val)
-            if val ~= "" then
-                local num = tonumber(val)
-                if num then
-                    local args = {[1] = "PickingVehicleMusicText", [2] = val}
-                    local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
-                    if RE then
-                        local event = RE:FindFirstChild("1Player1sCa1r")
-                        if event then
-                            event:FireServer(unpack(args))
-                        end
-                    end
-                end
-            end
-        end
-    })
-
-    BrookMusicTab:AddButton({
-        Name = "Skate",
-        Description = "Spawns a Skateboard",
-        Callback = function()
-            local args = {[1] = "SkateBoard"}
-            local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
-            if RE then
-                local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
-                if event then
-                    event:FireServer(unpack(args))
-                end
-            end
-        end
-    })
-
-    BrookMusicTab:AddButton({
-        Name = "Overboard",
-        Description = "Spawns a SegwaySmall",
-        Callback = function()
-            local args = {[1] = "SegwaySmall"}
-            local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
-            if RE then
-                local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
-                if event then
-                    event:FireServer(unpack(args))
-                end
-            end
-        end
-    })
-else
-    print("Brook Music features not available in this game.")
-end
-
-local Tab8 = Window:MakeTab({"Music", "music"}) 
+if brookEvent1 and brookEvent2 then
+local Tab8 = Window:MakeTab({"Music Brookhaven", "music"}) 
 
 local function tocarMusica(id)
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -793,6 +716,39 @@ Tab8:AddButton({
         tocarMusica("")
     end
 })
+
+Tab8:AddButton({
+        Name = "Skate",
+        Description = "Spawns a Skateboard",
+        Callback = function()
+            local args = {[1] = "SkateBoard"}
+            local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+            if RE then
+                local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+                if event then
+                    event:FireServer(unpack(args))
+                end
+            end
+        end
+    })
+
+    Tab8:AddButton({
+        Name = "Overboard",
+        Description = "Spawns a SegwaySmall",
+        Callback = function()
+            local args = {[1] = "SegwaySmall"}
+            local RE = game:GetService("ReplicatedStorage"):FindFirstChild("RE")
+            if RE then
+                local event = RE:FindFirstChild("1NoMoto1rVehicle1s")
+                if event then
+                    event:FireServer(unpack(args))
+                end
+            end
+        end
+    })
+else
+    print("Brook Music features not available in this game.")
+end
 
 local Tab = Window:MakeTab({"Teleports", "tp"}) -- Nome do ícone: 'portal' em minúsculo para teleporte
 
