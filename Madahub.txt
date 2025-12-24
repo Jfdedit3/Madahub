@@ -93,6 +93,29 @@ local function updateHealth()
     end
 end
 
+local InfoTab = Window:MakeTab({ Title = "Info", Icon = "rbxassetid://77855434347030" })
+
+
+
+InfoTab:AddSection({ "Script Information" })
+InfoTab:AddParagraph({ "Owner / Developer:", "Mada" })
+InfoTab:AddParagraph({ "My acc", "z4trox1 (Roblox)" })
+InfoTab:AddParagraph({ "Origin:", "French script" })
+InfoTab:AddParagraph({ "Friends :", "Akxii" })
+local name, version = identifyexecutor()
+InfoTab:AddParagraph({ "Your executor:", tostring(name .. " " .. (version or "")) })
+
+
+
+InfoTab:AddSection({ "Rejoin" })
+InfoTab:AddButton({
+    Name = "Rejoin",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, game.Players.LocalPlayer)
+    end
+})
+
 -- Création de l'onglet des cheats universels
 local MainCheatsTab = Window:MakeTab({"Universal Exploits", "bug"})
 
