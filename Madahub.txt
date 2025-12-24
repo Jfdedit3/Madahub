@@ -808,4 +808,48 @@ for _, btn in ipairs(teleportButtons) do
         end
     })
 end
+
+if game.PlaceId ~= 4924922222 then return end
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local player = Players.LocalPlayer
+local username = player and player.Name or "Player"
+local bioText = "Hello " .. username
+
+print("[RP DEBUG] Username:", username)
+print("[RP DEBUG] BioText:", bioText)
+
+local RE = ReplicatedStorage:WaitForChild("RE")
+local textRemote = RE:WaitForChild("1RPNam1eTex1t")
+local colorRemote = RE:WaitForChild("1RPNam1eColo1r")
+
+local argsName = {
+    [1] = "RolePlayName",
+    [2] = "Welcome to Mada hub"
+}
+textRemote:FireServer(unpack(argsName))
+
+task.wait(0.15)
+
+local argsBio = {
+    [1] = "RolePlayBio",
+    [2] = bioText
+}
+textRemote:FireServer(unpack(argsBio))
+
+task.wait(0.05)
+local color = Color3.fromRGB(138, 43, 226)
+local argsNameColor = {
+    [1] = "PickingRPNameColor",
+    [2] = color
+}
+colorRemote:FireServer(unpack(argsNameColor))
+
+local argsBioColor = {
+    [1] = "PickingRPBioColor",
+    [2] = color
+}
+colorRemote:FireServer(unpack(argsBioColor))
 disconnectAll()
