@@ -1,4 +1,4 @@
-local Madzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Mada-ui/refs/heads/main/Madzhubui "))()
+local Madzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jfdedit3/Mada-ui/refs/heads/main/Madzhubui"))()
 local Window = Madzlib:MakeWindow({Title = "Mada Hub 3.9", SubTitle = "by Mada(z4trox)", SaveFolder = "UniversalScriptConfig"})
 Window:AddMinimizeButton({Button = {Image = "rbxassetid://77855434347030", BackgroundTransparency = 0}, Corner = {CornerRadius = UDim.new(0, 8)}})
 
