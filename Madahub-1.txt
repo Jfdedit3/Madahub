@@ -137,7 +137,7 @@ createMusicDropdown("Forró", {
     }
 }, "Option 1")
 
--- Part 1 (Music 1 à Music 25)
+-- Partie 1 (Music 1 à Music 50)
 createMusicDropdown("New codes by Akxii & Mada - Part 1", {
     ["Madou"] = {
         {name = "Music 1", id = "96223086135288"},
@@ -164,13 +164,7 @@ createMusicDropdown("New codes by Akxii & Mada - Part 1", {
         {name = "Music 22", id = "98199198727548"},
         {name = "Music 23", id = "105721916543931"},
         {name = "Music 24", id = "111668097052966"},
-        {name = "Music 25", id = "136671968495863"}
-    }
-}, "Option 1")
-
--- Part 2 (Music 26 à Music 50)
-createMusicDropdown("New codes by Akxii & Mada - Part 2", {
-    ["Madou"] = {
+        {name = "Music 25", id = "136671968495863"},
         {name = "Music 26", id = "132311372545619"},
         {name = "Music 27", id = "124648098849708"},
         {name = "Music 28", id = "98184705510569"},
@@ -199,8 +193,8 @@ createMusicDropdown("New codes by Akxii & Mada - Part 2", {
     }
 }, "Option 1")
 
--- Part 3 (Music 51 à Music 76)
-createMusicDropdown("New codes by Akxii & Mada - Part 3", {
+-- Partie 2 (Music 51 à Music 76)
+createMusicDropdown("New codes by Akxii & Mada - Part 2", {
     ["Madou"] = {
         {name = "Music 51", id = "16831105312"},
         {name = "Music 52", id = "114608169341947"},
@@ -230,7 +224,6 @@ createMusicDropdown("New codes by Akxii & Mada - Part 3", {
         {name = "Music 76", id = "122039713538884"}
     }
 }, "Option 1")
-
 
 createMusicDropdown("Random Memes", {
     ["forro"] = {
