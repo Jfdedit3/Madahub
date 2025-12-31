@@ -24,7 +24,13 @@ InfoTab:AddParagraph({ "Friends :", "Kximad" })
 local name, version = identifyexecutor()
 InfoTab:AddParagraph({ "Your executor:", tostring(name .. " " .. (version or "")) })
 
-
+InfoTab:AddSection({ "Re execute" })
+InfoTab:AddButton({
+    Name = "Re exec Mada hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Mada-hub-reupload-78786"))()
+    end
+})
 
 InfoTab:AddSection({ "Rejoin" })
 InfoTab:AddButton({
