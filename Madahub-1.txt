@@ -212,7 +212,7 @@ createMusicDropdown("New codes by Akxii & Mada - Part 2", {
         {name = "Music 64", id = "133798757706866"},
         {name = "Music 65", id = "104640549125486"},
         {name = "Music 66", id = "129564709610140"},
-        {name = "Not 67 :(", id = "94835387971754"},
+        {name = "Music 67", id = "84948178931999"},
         {name = "Music 68", id = "88900228893875"},
         {name = "Music 69", id = "96820165642825"},
         {name = "Music 70", id = "91557236521456"},
