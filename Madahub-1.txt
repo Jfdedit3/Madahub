@@ -456,7 +456,18 @@ MadaScriptTab:AddButton({
     Name = "⚡ KOLINSKI admin FE",
     Description = "Loads KOLINSKI admin FE script",
     Callback = function()
-        safeLoad("https://raw.githubusercontent.com/Jfdedit3/KOLINSKI/refs/heads/main/KOLINSKI.lua", "KOLINSKI Admin") -- URL corrigée
+        local url = "https://raw.githubusercontent.com/Jfdedit3/KOLINSKI/refs/heads/main/KOLINSKI.lua"
+        local success, result = pcall(function()
+            local code = game:HttpGet(url)
+            local func = loadstring(code)
+            func()
+        end)
+
+        if not success then
+            warn("Failed to load KOLINSKI Admin: " .. tostring(result))
+        else
+            print("KOLINSKI Admin loaded successfully.")
+        end
     end
 })
 
@@ -464,7 +475,18 @@ MadaScriptTab:AddButton({
     Name = "👑 Mada Admin",
     Description = "Loads Mada Admin script",
     Callback = function()
-        safeLoad("https://raw.githubusercontent.com/Jfdedit3/Nameless-admin/refs/heads/main/Source", "Mada Admin") -- URL corrigée
+        local url = "https://raw.githubusercontent.com/Jfdedit3/Nameless-admin/refs/heads/main/Source"
+        local success, result = pcall(function()
+            local code = game:HttpGet(url)
+            local func = loadstring(code)
+            func()
+        end)
+
+        if not success then
+            warn("Failed to load Mada Admin: " .. tostring(result))
+        else
+            print("Mada Admin loaded successfully.")
+        end
     end
 })
 
@@ -472,7 +494,18 @@ MadaScriptTab:AddButton({
     Name = "🎵 Nameless music",
     Description = "Loads Nameless music script",
     Callback = function()
-        safeLoad("https://raw.githubusercontent.com/Jfdedit3/Nameless-music-lunch/refs/heads/main/Main", "Nameless Music") -- URL corrigée
+        local url = "https://raw.githubusercontent.com/Jfdedit3/Nameless-music-lunch/refs/heads/main/Main"
+        local success, result = pcall(function()
+            local code = game:HttpGet(url)
+            local func = loadstring(code)
+            func()
+        end)
+
+        if not success then
+            warn("Failed to load Nameless Music: " .. tostring(result))
+        else
+            print("Nameless Music loaded successfully.")
+        end
     end
 })
 
@@ -480,7 +513,18 @@ MadaScriptTab:AddButton({
     Name = "⚡ Mada Jims rng",
     Description = "Execute Mada Jims rng script",
     Callback = function()
-        safeLoad("https://pastebin.com/raw/0ADPHjNE", "Mada Jims RNG") -- URL corrigée
+        local url = "https://pastebin.com/raw/0ADPHjNE"
+        local success, result = pcall(function()
+            local code = game:HttpGet(url)
+            local func = loadstring(code)
+            func()
+        end)
+
+        if not success then
+            warn("Failed to execute Mada Jims RNG: " .. tostring(result))
+        else
+            print("Mada Jims RNG executed successfully.")
+        end
     end
 })
 
