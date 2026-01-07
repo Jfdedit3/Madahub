@@ -255,6 +255,63 @@ createMusicDropdown("New codes by Akxii & Mada - Part 2", {
     }
 }, "Option 1")
 
+-- Partie 3 (Music 100 à Music 150)
+createMusicDropdown("New codes by Akxii & Mada - Part 3", {
+    ["Madou"] = {
+        {name = "Music 100", id = "132089889287089"},
+        {name = "Music 101", id = "76536788573247"},
+        {name = "Music 102", id = "107499287034867"},
+        {name = "Music 103", id = "79487777360798"},
+        {name = "Music 104", id = "129147824267401"},
+        {name = "Music 105", id = "125689594955742"},
+        {name = "Music 106", id = "130152679346604"},
+        {name = "Music 107", id = "125915770933078"},
+        {name = "Music 108", id = "81395757137183"},
+        {name = "Music 109", id = "103245151249764"},
+        {name = "Music 110", id = "88232201387507"},
+        {name = "Music 111", id = "126541836935153"},
+        {name = "Music 112", id = "140612000097741"},
+        {name = "Music 113", id = "103861332608834"},
+        {name = "Music 114", id = "73634877064773"},
+        {name = "Music 115", id = "101682914622479"},
+        {name = "Music 116", id = "110688889156089"},
+        {name = "Music 117", id = "124198323349260"},
+        {name = "Music 118", id = ""},
+        {name = "Music 119", id = ""},
+        {name = "Music 120", id = ""},
+        {name = "Music 121", id = ""},
+        {name = "Music 122", id = ""},
+        {name = "Music 123", id = ""},
+        {name = "Music 124", id = ""},
+        {name = "Music 125", id = ""},
+        {name = "Music 126", id = ""},
+        {name = "Music 127", id = ""},
+        {name = "Music 128", id = ""},
+        {name = "Music 129", id = ""},
+        {name = "Music 130", id = ""},
+        {name = "Music 131", id = ""},
+        {name = "Music 132", id = ""},
+        {name = "Music 133", id = ""},
+        {name = "Music 134", id = ""},
+        {name = "Music 135", id = ""},
+        {name = "Music 136", id = ""},
+        {name = "Music 137", id = ""},
+        {name = "Music 138", id = ""},
+        {name = "Music 139", id = ""},
+        {name = "Music 140", id = ""},
+        {name = "Music 141", id = ""},
+        {name = "Music 142", id = ""},
+        {name = "Music 143", id = ""},
+        {name = "Music 144", id = ""},
+        {name = "Music 145", id = ""},
+        {name = "Music 146", id = ""},
+        {name = "Music 147", id = ""},
+        {name = "Music 148", id = ""},
+        {name = "Music 149", id = ""},
+        {name = "Music 150", id = ""}
+    }
+}, "Option 1")
+
 createMusicDropdown("Random Memes", {
     ["forro"] = {
         {name = "ANXIETY (Amapiano Re-fix)", id = "101483901475189"}, 
