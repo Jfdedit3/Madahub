@@ -260,7 +260,7 @@ createMusicDropdown("New codes by Akxii & Mada - Part 3", {
     ["Madou"] = {
         {name = "Music 100", id = "132089889287089"},
         {name = "Music 101", id = "126541836935153"},
-        {name = "Music 102", id = "107499287034867"},
+        {name = "Music 102", id = "73634877064773"},
         {name = "Music 103", id = "79487777360798"},
         {name = "Music 104", id = "129147824267401"},
         {name = "Music 105", id = "125689594955742"},
@@ -272,7 +272,7 @@ createMusicDropdown("New codes by Akxii & Mada - Part 3", {
         {name = "Music 111", id = "126541836935153"},
         {name = "Music 112", id = "140612000097741"},
         {name = "Music 113", id = "103861332608834"},
-        {name = "Music 114", id = "73634877064773"},
+        {name = "Music 114", id = ""},
         {name = "Music 115", id = "101682914622479"},
         {name = "Music 116", id = "110688889156089"},
         {name = "Music 117", id = "124198323349260"},
