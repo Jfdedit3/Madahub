@@ -585,6 +585,7 @@ local TeleportsPage = createTab("Teleports", false)
 local ItemsPage = createTab("Items", false)
 local MusicPage = createTab("Music", false)
 local ProtectionPage = createTab("Protection", false)
+local VersionsPage = createTab("Versions", false)
 local CreditsPage = createTab("Credits", false)
 
 local function createAdvancedSubTabs(parentPage, tabConfigs)
@@ -700,6 +701,510 @@ local function buildMusicPlayerUI(parentFrame)
     makeBtn("Stop Music", Color3.fromRGB(255, 60, 60), function() StopMusic() end)
     
     ScrollList.CanvasSize = UDim2.new(0, 0, 0, 140)
+end
+
+local function playMusicEverywhere(id)
+    local numericId = tostring(id or "")
+    if numericId == "" then
+        return
+    end
+    local re = ReplicatedStorage:FindFirstChild("RE")
+    if not re then
+        return
+    end
+
+    pcall(function()
+        local ev = re:FindFirstChild("PlayerToolEvent")
+        if ev then ev:FireServer("ToolMusicText", numericId) end
+    end)
+    pcall(function()
+        local ev = re:FindFirstChild("1Player1sHous1e")
+        if ev then ev:FireServer("PickHouseMusicText", numericId) end
+    end)
+    pcall(function()
+        local ev = re:FindFirstChild("1Player1sCa1r")
+        if ev then ev:FireServer("PickingCarMusicText", numericId) end
+    end)
+    pcall(function()
+        local ev = re:FindFirstChild("1NoMoto1rVehicle1s")
+        if ev then ev:FireServer("PickingScooterMusicText", numericId) end
+    end)
+end
+
+local function buildMusicDropdownUI(parentFrame)
+    local categories = {
+        {name = "ForrÃ³", songs = {
+            {name = "forrÃ³ ja cansou", id = "74812784884330"},
+            {name = "lenbro ate hoje", id = "71531533552899"},
+            {name = "escolha certa", id = "107088620814881"},
+            {name = "forrÃ³ da rezenha", id = "120973520531216"},
+            {name = "forrÃ³ dudu", id = "74404168179733"},
+            {name = "forrÃ³ sao joao", id = "106364874935196"},
+            {name = "forrÃ³ engraÃ§ado paia", id = "76524290482399"},
+            {name = "100% forro vaquejada", id = "92295159623916"},
+            {name = "PASTOR MIRIM E A LÃNGUA DOS ANJOS", id = "71153532555470"},
+            {name = "PARA NÃƒO ESQUECER QUEM SOMOS", id = "88937498361674"},
+            {name = "Uno zero", id = "112959083808887"},
+            {name = "Iate do neymar", id = "135738534706063"},
+            {name = "Batidao na aldeia", id = "79953696595578"},
+        }},
+        {name = "New codes by Akxii & Mada - Part 1", songs = {
+            {name = "Music 1", id = "96223086135288"},
+            {name = "Music 2", id = "99509934943990"},
+            {name = "Music 3", id = "122564283094043"},
+            {name = "Music 4", id = "125784363463466"},
+            {name = "Music 5", id = "84031748451867"},
+            {name = "Music 6", id = "128771129962214"},
+            {name = "Music 7", id = "136893418307185"},
+            {name = "Music 8", id = "71782154359434"},
+            {name = "Music 9", id = "133757202237498"},
+            {name = "Music 10", id = "116319055329754"},
+            {name = "Music 11", id = "81102632991320"},
+            {name = "Music 12", id = "72451271928975"},
+            {name = "Music 13", id = "107027481244497"},
+            {name = "Music 14", id = "124916012752607"},
+            {name = "Music 15", id = "138109214631038"},
+            {name = "Music 16", id = "138052729291665"},
+            {name = "Music 17", id = "85342086082111"},
+            {name = "Music 18", id = "16190756998"},
+            {name = "Music 19", id = "16190784875"},
+            {name = "Music 20", id = "112723885774179"},
+            {name = "Music 21", id = "102268180683654"},
+            {name = "Music 22", id = "98199198727548"},
+            {name = "Music 23", id = "105721916543931"},
+            {name = "Music 24", id = "111668097052966"},
+            {name = "Music 25", id = "80442198246996"},
+            {name = "Music 26", id = "132311372545619"},
+            {name = "Music 27", id = "124648098849708"},
+            {name = "Music 28", id = "98184705510569"},
+            {name = "Music 29", id = "110175139101701"},
+            {name = "Music 30", id = "117897345275675"},
+            {name = "Music 31", id = "131314026811082"},
+            {name = "Music 32", id = "116616553316934"},
+            {name = "Music 33", id = "111668097052966"},
+            {name = "Music 34", id = "79748889460505"},
+            {name = "Music 35", id = "16831105312"},
+            {name = "Music 36", id = "103409297553965"},
+            {name = "Music 37", id = "104575671082804"},
+            {name = "Music 38", id = "74502909274097"},
+            {name = "Music 39", id = "73263182682604"},
+            {name = "Music 40", id = "79524568159484"},
+            {name = "Music 41", id = "120785124326826"},
+            {name = "Music 42", id = "79748889460505"},
+            {name = "Music 43", id = "106213657249605"},
+            {name = "Music 44", id = "111668097052966"},
+            {name = "Music 45", id = "16190760005"},
+            {name = "Music 46", id = "15689448519"},
+            {name = "Music 47", id = "119124779781239"},
+            {name = "Music 48", id = "98337901681441"},
+            {name = "Music 49", id = "98629346350551"},
+            {name = "Music 50", id = "109444527994966"},
+        }},
+        {name = "New codes by Akxii & Mada - Part 2", songs = {
+            {name = "Music 51", id = "16831105312"},
+            {name = "Music 52", id = "114608169341947"},
+            {name = "Music 53", id = "123700514069374"},
+            {name = "Music 54", id = "9124780123"},
+            {name = "Music 55", id = "129071695986627"},
+            {name = "Music 56", id = "121703297529684"},
+            {name = "Music 57", id = "74258284867725"},
+            {name = "Music 58", id = "120342836549924"},
+            {name = "Music 59", id = "102308486921520"},
+            {name = "Music 60", id = "82696338249251"},
+            {name = "Music 61", id = "121205882949035"},
+            {name = "Music 62", id = "16190756998"},
+            {name = "Music 63", id = "16190784875"},
+            {name = "Music 64", id = "133798757706866"},
+            {name = "Music 65", id = "104640549125486"},
+            {name = "Music 66", id = "129564709610140"},
+            {name = "Music 67", id = "126976518689921"},
+            {name = "Music 68", id = "88900228893875"},
+            {name = "Music 69", id = "96820165642825"},
+            {name = "Music 70", id = "91557236521456"},
+            {name = "Music 71", id = "74414995120556"},
+            {name = "Music 72", id = "71720989209657"},
+            {name = "Music 73", id = "138169420138339"},
+            {name = "Music 74", id = "98574019808252"},
+            {name = "Music 75", id = "97382282509122"},
+            {name = "Music 76", id = "122039713538884"},
+            {name = "Music 77", id = "106597384364322"},
+            {name = "Music 78", id = "70659872531675"},
+            {name = "Music 79", id = "106597384364322"},
+            {name = "Music 80", id = "111326382350073"},
+            {name = "Music 81", id = "114503635653276"},
+            {name = "Music 82", id = "131882760439224"},
+            {name = "Music 83", id = "113826055107347"},
+            {name = "Music 84", id = "107863737682492"},
+            {name = "Music 85", id = "77352620256813"},
+            {name = "Music 86", id = "134528253560507"},
+            {name = "Music 87", id = "138585296224181"},
+            {name = "Music 88", id = "130919882345588"},
+            {name = "Music 89", id = "133264829827738"},
+            {name = "Music 90", id = "101055451438045"},
+            {name = "Music 91", id = "118064225618413"},
+            {name = "Music 92", id = "79409780351863"},
+            {name = "Music 93", id = "103977442459169"},
+            {name = "Music 94", id = "113778917971610"},
+            {name = "Music 95", id = "108285784339385"},
+            {name = "Music 96", id = "99509934943990"},
+            {name = "Music 97", id = "97362888083758"},
+            {name = "Music 98", id = "113030945043029"},
+            {name = "Music 99", id = "87815326856085"},
+            {name = "Thank akxii for 100", id = "136671968495863"},
+        }},
+        {name = "New codes by Akxii & Mada - Part 3", songs = {
+            {name = "Music 100", id = "94836973037894"},
+            {name = "Music 101", id = "126541836935153"},
+            {name = "Music 102", id = "73634877064773"},
+            {name = "Music 103", id = "131415306381990"},
+            {name = "Music 104", id = "135005570239371"},
+            {name = "Music 105", id = "125689594955742"},
+            {name = "Music 106", id = "130152679346604"},
+            {name = "Music 107", id = "125915770933078"},
+            {name = "Music 108", id = "81395757137183"},
+            {name = "Music 109", id = "103245151249764"},
+            {name = "Music 110", id = "88232201387507"},
+            {name = "Music 111", id = "126541836935153"},
+            {name = "Music 112", id = "140612000097741"},
+            {name = "Music 113", id = "103861332608834"},
+            {name = "Music 114", id = "98627387177279"},
+            {name = "Music 115", id = "101682914622479"},
+            {name = "Music 116", id = "110688889156089"},
+            {name = "Music 117", id = "124198323349260"},
+            {name = "Music 118", id = "98093367462579"},
+            {name = "Music 119", id = "136671968495863"},
+            {name = "Music 120", id = "107279913203261"},
+            {name = "Music 121", id = "85631500382769"},
+            {name = "Music 122", id = "122282993644176"},
+            {name = "Music 123", id = "118497308980437"},
+            {name = "Music 124", id = "93530869458875"},
+            {name = "Music 125", id = "94836973037894"},
+            {name = "Music 126", id = "131667285819847"},
+            {name = "Music 127", id = "103862468727311"},
+            {name = "Music 128", id = "98343825798492"},
+            {name = "Music 129", id = "122282993644176"},
+            {name = "Music 130", id = "93530869458875"},
+            {name = "Music 131", id = "73180347730720"},
+            {name = "Music 132", id = "138895541735050"},
+            {name = "Music 133", id = "126105992905914"},
+        }},
+        {name = "Random Memes", songs = {
+            {name = "ANXIETY (Amapiano Re-fix)", id = "101483901475189"},
+            {name = "Meu corpo, minhas regras", id = "127587901595282"},
+            {name = "$$gg$$gg", id = "137471775091253"},
+            {name = "Megalovania but its only the melodies", id = "104500091160463"},
+            {name = "androphono strikes back", id = "78312089943968"},
+            {name = "Bamm Bamm", id = "128730685516895"},
+            {name = "chupa cabra", id = "132890273173295"},
+            {name = "longe de mais", id = "124478512057763"},
+            {name = "Garoto de Copacabana", id = "135648634110254"},
+            {name = "CELL!", id = "117634275895085"},
+            {name = "Boa vibe em Ubatuba", id = "139059061493558"},
+            {name = "SLIP AWAY", id = "126152928520174"},
+            {name = "Alone in Motion", id = "122379348696948"},
+            {name = "Fade Away", id = "81002139735874"},
+            {name = "Wounds & Wishes", id = "109347979566607"},
+            {name = "AscensÃ£o do Monarca", id = "101864243033211"},
+            {name = "carro do ovo", id = "3148329638"},
+            {name = "ingles bus (fling ou kill bus)", id = "123268013026823"},
+            {name = "MIKU MIKU HATSUNE", id = "112783541496955"},
+            {name = "Five Nights at Freddy's", id = "110733765539890"},
+            {name = "Rat Dance", id = "133496635668044"},
+            {name = "Escalando a SeleÃ§Ã£o Brasileira para a Copa", id = "116546457407236"},
+        }},
+        {name = "Funk", songs = {
+            {name = "sua mulher funk", id = "90844637105538"},
+            {name = "fuga na viatura", id = "131891110268352"},
+            {name = "funkphonk fumando verde", id = "112143944982807"},
+            {name = "cauma xmara", id = "95664293972405"},
+            {name = "que que sharke", id = "129546408528391"},
+            {name = "Il Cacto Hipopotamo FUNK", id = "104491656009142"},
+            {name = "Espressora Signora FUNK", id = "123394392737234"},
+            {name = "trippi troop funk", id = "73049389767013"},
+            {name = "bombini funkphonk", id = "88814770244609"},
+            {name = "pre treino", id = "136869502216760"},
+            {name = "CVRL", id = "124244582950595"},
+            {name = "batida Brega Violino (Beat Brega Funk)", id = "99399643204701"},
+            {name = "DanÃ§a do Canguru (Pke Gaz1nh)", id = "86876136192157"},
+            {name = "espere 30segundos!! Ondas sonoras", id = "127757321382838"},
+            {name = "MONTAGEM ARABIANA (Pke Gaz1nh)", id = "78076624091098"},
+            {name = "Manda o papo (NGI)", id = "132642647937688"},
+            {name = "Viver bem", id = "82805460494325"},
+            {name = "Faixa estronda", id = "121187736532042"},
+            {name = "Ritmo Pixelado", id = "93928823862203"},
+            {name = "Viagem Sonora", id = "79349174602261"},
+            {name = "Melodia Virtual", id = "139147474886402"},
+            {name = "Melodia Serena", id = "97011217688307"},
+            {name = "SENTA", id = "124085422276732"},
+            {name = "TUNG TUNG TUNG TUNG SAHUR PHONK BRASILEIRO", id = "120353876640055"},
+            {name = "crazy-lol", id = "106958630419629"},
+            {name = "V7", id = "80348640826643"},
+            {name = "UIUAH", id = "82894376737849"},
+            {name = "meta ritmo", id = "110091098283354"},
+            {name = "CAPPUCCINO ASSASSINO (SPEDUP)", id = "132733033157915"},
+            {name = "haha (NGI)", id = "122114766584918"},
+            {name = "DO PO", id = "114207745067816"},
+        }},
+        {name = "Phonk", songs = {
+            {name = "wyles", id = "85385155970460"},
+            {name = "phonk kawai", id = "91502410121438"},
+            {name = "querendo da a bucet@", id = "72720721570850"},
+            {name = "vem no pocpoc", id = "102333419023382"},
+            {name = "tatiu wim", id = "122871512353520"},
+            {name = "novinha sapeca", id = "111668097052966"},
+            {name = "novinha representa", id = "93786060174790"},
+            {name = "phonk1", id = "77501611905348"},
+            {name = "phonk2", id = "126887144190812"},
+            {name = "phonk osadia", id = "88033569921555"},
+            {name = "phonk sarra", id = "132436320685732"},
+            {name = "relaionamento sem crush", id = "105832154444494"},
+            {name = "phonk3", id = "90323407842935"},
+            {name = "novinha danÃ§apanpa", id = "132245626038510"},
+            {name = "phonk sexoagreÃ§ivo", id = "111995323199676"},
+            {name = "phonk4", id = "115016589376700"},
+            {name = "phonk5", id = "118740708757685"},
+            {name = "phonk6", id = "139435437308948"},
+            {name = "phonk chapaquente", id = "109189438638906"},
+            {name = "phonk rajada", id = "105126065014034"},
+            {name = "rede globo", id = "138487820505005"},
+            {name = "phonk indiano", id = "87968531262747"},
+            {name = "vapo do vapo", id = "106317184644394"},
+            {name = "tutatatutata", id = "112068892721408"},
+            {name = "phonk slower", id = "122852029094656"},
+            {name = "phonk9", id = "91760524161503"},
+            {name = "phonk10", id = "73140398421340"},
+            {name = "phonk11", id = "137962454483542"},
+            {name = "phonk12", id = "84733736048142"},
+            {name = "phonk13", id = "106322173003761"},
+            {name = "phonk14", id = "94604796823780"},
+            {name = "phonk15", id = "118063577904953"},
+            {name = "phonk16", id = "115567432786512"},
+            {name = "phonk toq", id = "71304501822029"},
+            {name = "phonk hey", id = "132218979961283"},
+            {name = "phonk17", id = "102708912256857"},
+            {name = "phonk18", id = "140642559093189"},
+            {name = "phonk neve", id = "13530439660"},
+            {name = "phonk19", id = "87863924786534"},
+            {name = "phonk20", id = "133135085604736"},
+            {name = "phonk lento", id = "97258811783169"},
+            {name = "phonk21", id = "92308400487695"},
+            {name = "tipo wym", id = "88064647826500"},
+            {name = "estouradassa1", id = "92175624643620"},
+            {name = "estouradassa2", id = "108099943758978"},
+            {name = "Naaaaa", id = "109784877184952"},
+            {name = "trem", id = "114608169341947"},
+            {name = "eoropa", id = "111346133543699"},
+            {name = "atimosphekika", id = "77857496821844"},
+            {name = "phonk ALL THE TIME", id = "123809083385992"},
+            {name = "Lifelong Memory", id = "81929101024622"},
+            {name = "Automotivo Blondie (Pke Gaz1nh)", id = "74564219749776"},
+            {name = "à¸ªà¸§à¸±à¸ªà¸”à¸µà¸„à¸™à¹„à¸—à¸¢ v2", id = "118225359190317"},
+            {name = "MTG TU VAI SENTAR (Pke Gaz1nh)", id = "115317874112657"},
+            {name = "SARRA FUNK", id = "96249826607044"},
+            {name = "Catuquanvan", id = "88038595663211"},
+            {name = "F-D-1 (slowed)", id = "124958445624871"},
+            {name = "Sucessagem", id = "88551699463723"},
+            {name = "ILOVE phonksla", id = "82148953715595"},
+            {name = "SPEED SLIDE", id = "118959437310311"},
+            {name = "TOMA FUNK PHONK", id = "126291069838831"},
+            {name = "PASSO BEM SOLTO X NEW JAZZ", id = "122706595087279"},
+            {name = "MONTAGEM BIONICA DIAMANTE", id = "122338822665007"},
+            {name = "BALA SELVAGEM!", id = "96180057167470"},
+            {name = "Luz <3", id = "74281337525581"},
+            {name = "COMO TU", id = "86928685812280"},
+            {name = "MONTAGEM SOLAR TROPICANO (SPEED UP)", id = "116461681407294"},
+            {name = "MONTAGEM SOLAR TROPICANO (SLOWED)", id = "109308273341422"},
+            {name = "YO DE TI", id = "125181345407169"},
+            {name = "Beauty, (Phonk), Super sped up", id = "71123357599630"},
+            {name = "MONTAGEM BOOMBOX DO MALA FUNK", id = "86537505028256"},
+            {name = "BRAZIL DO FUNK", id = "133498554139200"},
+            {name = "BRR BRR PATAPIM FUNK", id = "117170901476451"},
+            {name = "MONTAGEM TERRA BELA FUNK", id = "134770548505933"},
+            {name = "FUNK DO RAVE 1.0", id = "137135395010424"},
+            {name = "Portao Funk", id = "70900514961735"},
+            {name = "EspaÃ§o Funk", id = "110519906029322"},
+            {name = "FUTABA", id = "91834632690710"},
+            {name = "MelÃ³dica ExplosÃ£o De Melodia", id = "98371771055411"},
+            {name = "RASGO", id = "98267810117949"},
+            {name = "HIPNOTIZA", id = "117668905142866"},
+            {name = "CRISTAL NOTURNO", id = "103695219371872"},
+            {name = "SKY HIGH", id = "123517126955383"},
+            {name = "MIKU top", id = "102771149931910"},
+            {name = "ACABU SO FUNK", id = "127870227978818"},
+            {name = "CREATIFE FUNK", id = "130525387712209"},
+            {name = "GOTH FUNK", id = "97662362226511"},
+            {name = "PORTUGESE FUNK", id = "125858109122379"},
+            {name = "SUBURBANA", id = "139825057894568"},
+            {name = "ESPERA LA NOCHE FUNK", id = "139768056738146"},
+            {name = "SIN PERMISO FUNK", id = "92572896648274"},
+            {name = "MONTAGEM DACE RAT", id = "98711199754623"},
+            {name = "LOVELY FUNK", id = "130633105268814"},
+            {name = "STORYMODECOOL", id = "87115976125426"},
+            {name = "BLACK COFFEE FUNK", id = "82705137378395"},
+            {name = "KOBALT", id = "79381341943021"},
+            {name = "andante bacterial", id = "105882833374061"},
+            {name = "ANGEL Speed Up", id = "139593870988593"},
+            {name = "LUTA Ã‰PICA", id = "73966367524216"},
+            {name = "MALDITA", id = "133814632960968"},
+            {name = "DA ZONA NTJ VERSON", id = "105770593501071"},
+            {name = "HIPNOTIZA", id = "132015050363205"},
+            {name = "MIDZUKI speed up", id = "129151948619922"},
+            {name = "movimenta funk", id = "114994598691121"},
+            {name = "CRISTAL", id = "103445348511856"},
+            {name = "Letero funkphonk", id = "99409598156364"},
+        }},
+    }
+
+
+    local Root = Instance.new("Frame")
+    Root.Size = UDim2.new(1, 0, 1, 0)
+    Root.BackgroundTransparency = 1
+    Root.ZIndex = 4
+    Root.Parent = parentFrame
+
+    local IdBox = Instance.new("TextBox")
+    IdBox.Size = UDim2.new(1, 0, 0, 22)
+    IdBox.Position = UDim2.new(0, 0, 0, 4)
+    IdBox.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    IdBox.PlaceholderText = "ID music"
+    IdBox.Text = ""
+    IdBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    IdBox.Font = Enum.Font.Gotham
+    IdBox.TextSize = 11
+    IdBox.ClearTextOnFocus = false
+    IdBox.ZIndex = 4
+    IdBox.Parent = Root
+    Instance.new("UICorner", IdBox).CornerRadius = UDim.new(0, 4)
+
+    local PlayIdBtn = Instance.new("TextButton")
+    PlayIdBtn.Size = UDim2.new(1, 0, 0, 22)
+    PlayIdBtn.Position = UDim2.new(0, 0, 0, 30)
+    PlayIdBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+    PlayIdBtn.Text = "Play ID in all (Radio/House/Car/Scooter)"
+    PlayIdBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PlayIdBtn.Font = Enum.Font.GothamBold
+    PlayIdBtn.TextSize = 10
+    PlayIdBtn.ZIndex = 4
+    PlayIdBtn.Parent = Root
+    Instance.new("UICorner", PlayIdBtn).CornerRadius = UDim.new(0, 4)
+    applyClickAnimation(PlayIdBtn)
+
+    local CategoryList = Instance.new("ScrollingFrame")
+    CategoryList.Size = UDim2.new(1, 0, 1, -58)
+    CategoryList.Position = UDim2.new(0, 0, 0, 58)
+    CategoryList.BackgroundTransparency = 1
+    CategoryList.BorderSizePixel = 0
+    CategoryList.ScrollBarThickness = 3
+    CategoryList.ZIndex = 4
+    CategoryList.CanvasSize = UDim2.new(0, 0, 0, 0)
+    CategoryList.Parent = Root
+
+    local CategoryLayout = Instance.new("UIListLayout")
+    CategoryLayout.Padding = UDim.new(0, 6)
+    CategoryLayout.Parent = CategoryList
+
+    local function refreshCanvas()
+        CategoryList.CanvasSize = UDim2.new(0, 0, 0, CategoryLayout.AbsoluteContentSize.Y + 8)
+    end
+
+    local function closeOtherDropdowns(exceptDrop)
+        for _, frame in ipairs(CategoryList:GetChildren()) do
+            if frame:IsA("Frame") then
+                local drop = frame:FindFirstChild("SongDrop")
+                if drop and drop ~= exceptDrop then
+                    drop.Visible = false
+                    frame.Size = UDim2.new(1, 0, 0, 28)
+                end
+            end
+        end
+        refreshCanvas()
+    end
+
+    local function makeSongButton(parent, song)
+        local b = Instance.new("TextButton")
+        b.Size = UDim2.new(1, 0, 0, 18)
+        b.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+        b.Text = " " .. song.name
+        b.TextColor3 = Color3.fromRGB(235, 235, 235)
+        b.Font = Enum.Font.Gotham
+        b.TextSize = 9
+        b.TextXAlignment = Enum.TextXAlignment.Left
+        b.ZIndex = 6
+        b.Parent = parent
+        Instance.new("UICorner", b).CornerRadius = UDim.new(0, 4)
+        b.MouseButton1Click:Connect(function()
+            if song.id and song.id ~= "" and song.id ~= "4354908569" then
+                playMusicEverywhere(song.id)
+            end
+        end)
+    end
+
+    for _, category in ipairs(categories) do
+        local card = Instance.new("Frame")
+        card.Size = UDim2.new(1, 0, 0, 28)
+        card.BackgroundColor3 = Color3.fromRGB(18, 22, 34)
+        card.BorderSizePixel = 0
+        card.ZIndex = 4
+        card.Parent = CategoryList
+        Instance.new("UICorner", card).CornerRadius = UDim.new(0, 5)
+
+        local topBtn = Instance.new("TextButton")
+        topBtn.Size = UDim2.new(1, 0, 0, 24)
+        topBtn.Position = UDim2.new(0, 0, 0, 2)
+        topBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+        topBtn.Text = category.name .. " v"
+        topBtn.TextColor3 = Color3.fromRGB(210, 220, 240)
+        topBtn.Font = Enum.Font.GothamBold
+        topBtn.TextSize = 10
+        topBtn.ZIndex = 5
+        topBtn.Parent = card
+        Instance.new("UICorner", topBtn).CornerRadius = UDim.new(0, 4)
+        applyClickAnimation(topBtn)
+
+        local drop = Instance.new("ScrollingFrame")
+        drop.Name = "SongDrop"
+        drop.Size = UDim2.new(1, -6, 0, math.min(#category.songs * 20 + 4, 92))
+        drop.Position = UDim2.new(0, 3, 0, 28)
+        drop.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+        drop.BorderSizePixel = 0
+        drop.ScrollBarThickness = 3
+        drop.Visible = false
+        drop.ZIndex = 6
+        drop.CanvasSize = UDim2.new(0, 0, 0, 0)
+        drop.Parent = card
+        Instance.new("UICorner", drop).CornerRadius = UDim.new(0, 4)
+
+        local dropLayout = Instance.new("UIListLayout")
+        dropLayout.Padding = UDim.new(0, 2)
+        dropLayout.Parent = drop
+
+        for _, song in ipairs(category.songs) do
+            makeSongButton(drop, song)
+        end
+        drop.CanvasSize = UDim2.new(0, 0, 0, dropLayout.AbsoluteContentSize.Y + 4)
+
+        topBtn.MouseButton1Click:Connect(function()
+            local showing = not drop.Visible
+            closeOtherDropdowns(drop)
+            drop.Visible = showing
+            if showing then
+                card.Size = UDim2.new(1, 0, 0, 32 + drop.Size.Y.Offset)
+            else
+                card.Size = UDim2.new(1, 0, 0, 28)
+            end
+            refreshCanvas()
+        end)
+    end
+
+    CategoryLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(refreshCanvas)
+    refreshCanvas()
+
+    PlayIdBtn.MouseButton1Click:Connect(function()
+        local id = tostring(IdBox.Text or "")
+        if id ~= "" then
+            playMusicEverywhere(id)
+        end
+    end)
 end
 
 -- Music Playlist UI
@@ -1742,13 +2247,106 @@ local function buildCreditsUI(parentFrame)
     MainText.Size = UDim2.new(1, -20, 0, 60)
     MainText.Position = UDim2.new(0, 10, 0.5, -40)
     MainText.BackgroundTransparency = 1
-    MainText.Text = "Mada hub v4\\z4trox"
+    MainText.Text = "Mada hub v4\\nz4trox"
     MainText.TextColor3 = Color3.fromRGB(50, 255, 100)
     MainText.Font = Enum.Font.GothamBold
     MainText.TextSize = 13
     MainText.TextWrapped = true
     MainText.ZIndex = 4
     MainText.Parent = parentFrame
+end
+
+local function buildVersionsUI(parentFrame)
+    local Scroll = Instance.new("ScrollingFrame")
+    Scroll.Size = UDim2.new(1, 0, 1, 0)
+    Scroll.BackgroundTransparency = 1
+    Scroll.BorderSizePixel = 0
+    Scroll.ScrollBarThickness = 3
+    Scroll.ZIndex = 4
+    Scroll.Parent = parentFrame
+
+    local Layout = Instance.new("UIListLayout")
+    Layout.Padding = UDim.new(0, 6)
+    Layout.SortOrder = Enum.SortOrder.LayoutOrder
+    Layout.Parent = Scroll
+
+    local versions = {
+        {
+            title = "v1 - Base",
+            text = "Initial UI and main hub structure."
+        },
+        {
+            title = "v2 - Interface",
+            text = "Improved interface, GUI renamed, Spammer/Props tabs removed, credits updated."
+        },
+        {
+            title = "v3 - Tabs",
+            text = "Integrated tabs from Mada.txt (excluding requested ones) with linked content."
+        },
+        {
+            title = "v4 - Music Presets",
+            text = "Music migrated to presets with one dropdown per style and direct track play."
+        },
+        {
+            title = "v5 - Full Import",
+            text = "Complete music preset import from Mada.txt (Forro, New codes p1/p2/p3, Random Memes, Funk, Phonk)."
+        },
+        {
+            title = "v6 - Naming",
+            text = "Music subtab renamed from Dropdown to Preset."
+        }
+    }
+
+    local function addVersionCard(title, text)
+        local Card = Instance.new("Frame")
+        Card.Size = UDim2.new(1, -4, 0, 62)
+        Card.BackgroundColor3 = Color3.fromRGB(24, 28, 38)
+        Card.BorderSizePixel = 0
+        Card.ZIndex = 4
+        Card.Parent = Scroll
+        Instance.new("UICorner", Card).CornerRadius = UDim.new(0, 6)
+
+        local Stroke = Instance.new("UIStroke")
+        Stroke.Color = Color3.fromRGB(85, 165, 255)
+        Stroke.Transparency = 0.72
+        Stroke.Thickness = 1
+        Stroke.Parent = Card
+
+        local Title = Instance.new("TextLabel")
+        Title.Size = UDim2.new(1, -12, 0, 18)
+        Title.Position = UDim2.new(0, 8, 0, 6)
+        Title.BackgroundTransparency = 1
+        Title.Text = title
+        Title.TextColor3 = Color3.fromRGB(90, 190, 255)
+        Title.Font = Enum.Font.GothamBold
+        Title.TextSize = 11
+        Title.TextXAlignment = Enum.TextXAlignment.Left
+        Title.ZIndex = 5
+        Title.Parent = Card
+
+        local Body = Instance.new("TextLabel")
+        Body.Size = UDim2.new(1, -12, 0, 34)
+        Body.Position = UDim2.new(0, 8, 0, 24)
+        Body.BackgroundTransparency = 1
+        Body.Text = text
+        Body.TextColor3 = Color3.fromRGB(220, 225, 235)
+        Body.Font = Enum.Font.Gotham
+        Body.TextSize = 10
+        Body.TextWrapped = true
+        Body.TextXAlignment = Enum.TextXAlignment.Left
+        Body.TextYAlignment = Enum.TextYAlignment.Top
+        Body.ZIndex = 5
+        Body.Parent = Card
+    end
+
+    for _, v in ipairs(versions) do
+        addVersionCard(v.title, v.text)
+    end
+
+    Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 8)
+    Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 8)
+    end)
 end
 
 local function buildImportedTabUI(parentFrame, title)
@@ -2115,9 +2713,10 @@ buildImportedTabUI(TeleportsPage, "Teleports")
 buildImportedTabUI(ItemsPage, "Items")
 createAdvancedSubTabs(MusicPage, {
     {name = "Player", isRoast = false, buildFunc = buildMusicPlayerUI},
-    {name = "Playlist", isRoast = false, buildFunc = buildMusicIDsUI}
+    {name = "Preset", isRoast = false, buildFunc = buildMusicDropdownUI}
 })
 buildProtectionUI(ProtectionPage)
+buildVersionsUI(VersionsPage)
 buildCreditsUI(CreditsPage)
 
 applyModernPolish(Main)
