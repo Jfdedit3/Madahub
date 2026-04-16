@@ -2247,7 +2247,7 @@ local function buildCreditsUI(parentFrame)
     MainText.Size = UDim2.new(1, -20, 0, 60)
     MainText.Position = UDim2.new(0, 10, 0.5, -40)
     MainText.BackgroundTransparency = 1
-    MainText.Text = "Mada hub v4\\nz4trox"
+    MainText.Text = "Mada hub v4\\z4trox"
     MainText.TextColor3 = Color3.fromRGB(50, 255, 100)
     MainText.Font = Enum.Font.GothamBold
     MainText.TextSize = 13
