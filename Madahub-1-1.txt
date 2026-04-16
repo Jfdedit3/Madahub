@@ -25,6 +25,7 @@ ScreenGui.Parent = CoreGui
 local scriptAlive = true
 local stopPropEngine = function() end
 local clearProtectionState = function() end
+local Popup
 
 ScreenGui.Destroying:Connect(function()
     scriptAlive = false
@@ -61,12 +62,47 @@ ExternalStroke.Transparency = 0.75
 ExternalStroke.Thickness = 1
 ExternalStroke.Parent = ExternalToggle
 
+local MAIN_OPEN_SIZE = UDim2.new(0, 370, 0, 255)
+local MAIN_OPEN_POS = UDim2.new(0.5, -185, 0.5, -127)
+local MAIN_MINI_SIZE = UDim2.new(0, 332, 0, 228)
+local MAIN_MINI_POS = UDim2.new(0.5, -166, 0.5, -114)
+local isMainOpen = true
+
+local function showMainAnimated()
+    Main.Visible = true
+    Main.Size = MAIN_MINI_SIZE
+    Main.Position = MAIN_MINI_POS
+    Main.BackgroundTransparency = 0.16
+    TweenService:Create(Main, TweenInfo.new(0.24, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        Size = MAIN_OPEN_SIZE,
+        Position = MAIN_OPEN_POS,
+        BackgroundTransparency = 0.02
+    }):Play()
+end
+
+local function hideMainAnimated()
+    local tween = TweenService:Create(Main, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+        Size = MAIN_MINI_SIZE,
+        Position = MAIN_MINI_POS,
+        BackgroundTransparency = 0.2
+    })
+    tween:Play()
+    tween.Completed:Connect(function()
+        if not isMainOpen and scriptAlive then
+            Main.Visible = false
+        end
+    end)
+end
+
 ExternalToggle.MouseButton1Click:Connect(function()
-    Main.Visible = not Main.Visible
-    if Main.Visible then
+    isMainOpen = not isMainOpen
+    if isMainOpen then
+        showMainAnimated()
         ExternalToggle.Text = "HIDE"
         ExternalToggle.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
     else
+        Popup.Visible = false
+        hideMainAnimated()
         ExternalToggle.Text = "OPEN"
         ExternalToggle.BackgroundColor3 = Color3.fromRGB(60, 180, 90)
     end
@@ -111,6 +147,23 @@ do
         end
     end)
 end
+
+task.spawn(function()
+    while scriptAlive and ExternalToggle.Parent do
+        if isMainOpen then
+            TweenService:Create(ExternalToggle, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 72, 0, 28)
+            }):Play()
+            task.wait(0.95)
+            TweenService:Create(ExternalToggle, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 68, 0, 26)
+            }):Play()
+            task.wait(0.95)
+        else
+            task.wait(0.5)
+        end
+    end
+end)
 
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 10)
 
@@ -179,7 +232,7 @@ task.spawn(function()
 end)
 
 -- Popup
-local Popup = Instance.new("Frame")
+Popup = Instance.new("Frame")
 Popup.Size = UDim2.new(1, 0, 1, 0)
 Popup.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
 Popup.BackgroundTransparency = 0.05
@@ -634,7 +687,11 @@ local function createTab(name, isFirst)
         if TabStroke then
             TweenService:Create(TabStroke, TweenInfo.new(0.2), {Transparency = 0.75}):Play()
         end
+        Page.Position = UDim2.new(0, 20, 0, 5)
         Page.Visible = true
+        TweenService:Create(Page, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Position = UDim2.new(0, 10, 0, 5)
+        }):Play()
         activeContent = Page
     end)
     return Page
@@ -705,7 +762,11 @@ local function createAdvancedSubTabs(parentPage, tabConfigs)
         SubBtn.MouseButton1Click:Connect(function()
             for _, frame in ipairs(contentFrames) do frame.Visible = false end
             for _, btn in ipairs(buttons) do TweenService:Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(30, 30, 40)}):Play() end
+            SubContent.Position = UDim2.new(0, 0, 0, 29)
             SubContent.Visible = true
+            TweenService:Create(SubContent, TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Position = UDim2.new(0, 0, 0, 25)
+            }):Play()
             TweenService:Create(SubBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 65)}):Play()
         end)
     end
@@ -2318,7 +2379,7 @@ local function buildCreditsUI(parentFrame)
     MainText.Size = UDim2.new(1, -20, 0, 60)
     MainText.Position = UDim2.new(0, 10, 0.5, -40)
     MainText.BackgroundTransparency = 1
-    MainText.Text = "Mada hub v4\\z4trox"
+    MainText.Text = "z4trox"
     MainText.TextColor3 = Color3.fromRGB(50, 255, 100)
     MainText.Font = Enum.Font.GothamBold
     MainText.TextSize = 13
@@ -2572,21 +2633,388 @@ local function buildImportedTabUI(parentFrame, title)
         end)
 
     elseif title == "Avatar" then
-        addLabel("Avatar Tools")
-        local targetName = ""
-        addTextBoxRow("Player Name", "Target", function(v)
-            targetName = v
-        end)
-        addButton("Copy Avatar", function()
-            local target = Players:FindFirstChild(targetName)
-            local myHum = safeGetHumanoid()
-            local tHum = target and target.Character and target.Character:FindFirstChildOfClass("Humanoid")
-            if myHum and tHum then
-                local ok, desc = pcall(function() return tHum:GetAppliedDescription() end)
-                if ok and desc then
-                    pcall(function() myHum:ApplyDescription(desc) end)
+        addLabel("Copy Skin")
+
+        local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+        local Target = nil
+
+        local Status = Instance.new("TextLabel")
+        Status.Size = UDim2.new(1, -4, 0, 20)
+        Status.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+        Status.Text = "  Select a player to copy."
+        Status.TextColor3 = Color3.fromRGB(190, 210, 255)
+        Status.Font = Enum.Font.Gotham
+        Status.TextSize = 10
+        Status.TextXAlignment = Enum.TextXAlignment.Left
+        Status.ZIndex = 5
+        Status.Parent = Scroll
+        Instance.new("UICorner", Status).CornerRadius = UDim.new(0, 5)
+
+        local function setAvatarStatus(message, isError)
+            Status.Text = "  " .. message
+            Status.TextColor3 = isError and Color3.fromRGB(255, 130, 130) or Color3.fromRGB(190, 210, 255)
+        end
+
+        local function GetPlayerNames()
+            local PlayerNames = {}
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player ~= LocalPlayer then
+                    table.insert(PlayerNames, player.Name)
                 end
             end
+            table.sort(PlayerNames, function(a, b)
+                return string.lower(a) < string.lower(b)
+            end)
+            return PlayerNames
+        end
+
+        local DropdownFrame = Instance.new("Frame")
+        DropdownFrame.Size = UDim2.new(1, -4, 0, 28)
+        DropdownFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+        DropdownFrame.ZIndex = 5
+        DropdownFrame.Parent = Scroll
+        Instance.new("UICorner", DropdownFrame).CornerRadius = UDim.new(0, 5)
+
+        local DropdownLabel = Instance.new("TextLabel")
+        DropdownLabel.Size = UDim2.new(0.48, 0, 1, 0)
+        DropdownLabel.Position = UDim2.new(0, 10, 0, 0)
+        DropdownLabel.BackgroundTransparency = 1
+        DropdownLabel.Text = "Select Player"
+        DropdownLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+        DropdownLabel.Font = Enum.Font.Gotham
+        DropdownLabel.TextSize = 10
+        DropdownLabel.TextXAlignment = Enum.TextXAlignment.Left
+        DropdownLabel.ZIndex = 6
+        DropdownLabel.Parent = DropdownFrame
+
+        local TargetBtn = Instance.new("TextButton")
+        TargetBtn.Size = UDim2.new(0, 120, 0, 18)
+        TargetBtn.Position = UDim2.new(1, -130, 0.5, -9)
+        TargetBtn.BackgroundColor3 = Color3.fromRGB(20, 22, 30)
+        TargetBtn.Text = "Select"
+        TargetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TargetBtn.Font = Enum.Font.Gotham
+        TargetBtn.TextSize = 10
+        TargetBtn.ZIndex = 6
+        TargetBtn.Parent = DropdownFrame
+        Instance.new("UICorner", TargetBtn).CornerRadius = UDim.new(0, 4)
+        applyClickAnimation(TargetBtn)
+
+        local TargetDrop = Instance.new("ScrollingFrame")
+        TargetDrop.Size = UDim2.new(1, 0, 0, 0)
+        TargetDrop.BackgroundColor3 = Color3.fromRGB(18, 20, 28)
+        TargetDrop.BorderSizePixel = 0
+        TargetDrop.ClipsDescendants = true
+        TargetDrop.ScrollBarThickness = 3
+        TargetDrop.ScrollBarImageTransparency = 0.25
+        TargetDrop.CanvasSize = UDim2.new(0, 0, 0, 0)
+        TargetDrop.Visible = false
+        TargetDrop.ZIndex = 20
+        TargetDrop.Parent = DropdownFrame
+        Instance.new("UICorner", TargetDrop).CornerRadius = UDim.new(0, 5)
+
+        local TargetDropLayout = Instance.new("UIListLayout")
+        TargetDropLayout.Padding = UDim.new(0, 3)
+        TargetDropLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        TargetDropLayout.Parent = TargetDrop
+
+        local targetDropOpen = false
+        local playerListConnections = {}
+        local activityEntries = {}
+
+        local ActivityFrame = Instance.new("Frame")
+        ActivityFrame.Size = UDim2.new(1, -4, 0, 104)
+        ActivityFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+        ActivityFrame.ZIndex = 5
+        ActivityFrame.Parent = Scroll
+        Instance.new("UICorner", ActivityFrame).CornerRadius = UDim.new(0, 5)
+
+        local ActivityTitle = Instance.new("TextLabel")
+        ActivityTitle.Size = UDim2.new(1, -12, 0, 18)
+        ActivityTitle.Position = UDim2.new(0, 8, 0, 4)
+        ActivityTitle.BackgroundTransparency = 1
+        ActivityTitle.Text = "Player Activity"
+        ActivityTitle.TextColor3 = Color3.fromRGB(210, 225, 255)
+        ActivityTitle.Font = Enum.Font.GothamSemibold
+        ActivityTitle.TextSize = 10
+        ActivityTitle.TextXAlignment = Enum.TextXAlignment.Left
+        ActivityTitle.ZIndex = 6
+        ActivityTitle.Parent = ActivityFrame
+
+        local ActivityScroll = Instance.new("ScrollingFrame")
+        ActivityScroll.Size = UDim2.new(1, -12, 1, -26)
+        ActivityScroll.Position = UDim2.new(0, 6, 0, 22)
+        ActivityScroll.BackgroundColor3 = Color3.fromRGB(20, 22, 30)
+        ActivityScroll.BorderSizePixel = 0
+        ActivityScroll.ScrollBarThickness = 3
+        ActivityScroll.ScrollBarImageTransparency = 0.25
+        ActivityScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+        ActivityScroll.ZIndex = 6
+        ActivityScroll.Parent = ActivityFrame
+        Instance.new("UICorner", ActivityScroll).CornerRadius = UDim.new(0, 4)
+
+        local ActivityLayout = Instance.new("UIListLayout")
+        ActivityLayout.Padding = UDim.new(0, 3)
+        ActivityLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        ActivityLayout.Parent = ActivityScroll
+
+        local function refreshTargetDropSize()
+            local listHeight = math.min(TargetDropLayout.AbsoluteContentSize.Y + 6, 110)
+            TargetDrop.CanvasSize = UDim2.new(0, 0, 0, TargetDropLayout.AbsoluteContentSize.Y + 6)
+            if targetDropOpen then
+                TargetDrop.Visible = true
+                TargetDrop.Size = UDim2.new(1, 0, 0, listHeight)
+                DropdownFrame.Size = UDim2.new(1, -4, 0, 28 + listHeight + 4)
+            else
+                TargetDrop.Visible = false
+                TargetDrop.Size = UDim2.new(1, 0, 0, 0)
+                DropdownFrame.Size = UDim2.new(1, -4, 0, 28)
+            end
+        end
+
+        local function refreshActivitySize()
+            ActivityScroll.CanvasSize = UDim2.new(0, 0, 0, ActivityLayout.AbsoluteContentSize.Y + 4)
+        end
+
+        local function pushActivity(message, color)
+            local Entry = Instance.new("TextLabel")
+            Entry.Size = UDim2.new(1, -8, 0, 18)
+            Entry.BackgroundTransparency = 1
+            Entry.Text = message
+            Entry.TextColor3 = color or Color3.fromRGB(220, 220, 230)
+            Entry.Font = Enum.Font.Gotham
+            Entry.TextSize = 10
+            Entry.TextXAlignment = Enum.TextXAlignment.Left
+            Entry.ZIndex = 7
+            Entry.Parent = ActivityScroll
+
+            table.insert(activityEntries, Entry)
+            while #activityEntries > 8 do
+                local oldest = table.remove(activityEntries, 1)
+                if oldest then
+                    oldest:Destroy()
+                end
+            end
+
+            refreshActivitySize()
+            ActivityScroll.CanvasPosition = Vector2.new(0, math.max(0, ActivityLayout.AbsoluteContentSize.Y))
+        end
+
+        TargetDropLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(refreshTargetDropSize)
+        ActivityLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(refreshActivitySize)
+
+        local function clearPlayerList()
+            for _, child in ipairs(TargetDrop:GetChildren()) do
+                if child:IsA("TextButton") or child:IsA("TextLabel") then
+                    child:Destroy()
+                end
+            end
+        end
+
+        local function closePlayerDropdown()
+            targetDropOpen = false
+            refreshTargetDropSize()
+        end
+
+        local function rebuildPlayerDropdown()
+            clearPlayerList()
+            local names = GetPlayerNames()
+
+            if #names == 0 then
+                local Empty = Instance.new("TextLabel")
+                Empty.Size = UDim2.new(1, -8, 0, 20)
+                Empty.BackgroundTransparency = 1
+                Empty.Text = "No players found"
+                Empty.TextColor3 = Color3.fromRGB(170, 170, 180)
+                Empty.Font = Enum.Font.Gotham
+                Empty.TextSize = 10
+                Empty.ZIndex = 21
+                Empty.Parent = TargetDrop
+            else
+                for _, name in ipairs(names) do
+                    local Opt = Instance.new("TextButton")
+                    Opt.Size = UDim2.new(1, -8, 0, 20)
+                    Opt.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+                    Opt.Text = name
+                    Opt.TextColor3 = Color3.fromRGB(240, 240, 245)
+                    Opt.Font = Enum.Font.Gotham
+                    Opt.TextSize = 10
+                    Opt.ZIndex = 21
+                    Opt.Parent = TargetDrop
+                    Instance.new("UICorner", Opt).CornerRadius = UDim.new(0, 4)
+                    applyClickAnimation(Opt)
+                    table.insert(playerListConnections, Opt.MouseButton1Click:Connect(function()
+                        Target = name
+                        TargetBtn.Text = name
+                        setAvatarStatus("Selected: " .. name, false)
+                        closePlayerDropdown()
+                    end))
+                end
+            end
+
+            refreshTargetDropSize()
+        end
+
+        local function UpdateDropdown()
+            if Target and not Players:FindFirstChild(Target) then
+                Target = nil
+                TargetBtn.Text = "Select"
+                setAvatarStatus("Selected player left the server.", true)
+            end
+            rebuildPlayerDropdown()
+        end
+
+        table.insert(playerListConnections, Players.PlayerAdded:Connect(function(player)
+            UpdateDropdown()
+            pushActivity("+ Joined: " .. player.Name, Color3.fromRGB(120, 255, 160))
+        end))
+        table.insert(playerListConnections, Players.PlayerRemoving:Connect(function(player)
+            if Target == player.Name then
+                Target = nil
+                TargetBtn.Text = "Select"
+                setAvatarStatus("Selected player left the server.", true)
+            end
+            UpdateDropdown()
+            pushActivity("- Left: " .. player.Name, Color3.fromRGB(255, 140, 140))
+        end))
+
+        table.insert(playerListConnections, TargetBtn.MouseButton1Click:Connect(function()
+            targetDropOpen = not targetDropOpen
+            if targetDropOpen then
+                rebuildPlayerDropdown()
+            else
+                closePlayerDropdown()
+            end
+        end))
+
+        UpdateDropdown()
+        pushActivity("Monitoring players in real time.", Color3.fromRGB(150, 190, 255))
+
+        addButton("Copy Avatar", function()
+            if not Target then
+                setAvatarStatus("Select a player first.", true)
+                return
+            end
+
+            local LP = Players.LocalPlayer
+            local LChar = LP.Character
+            local TPlayer = Players:FindFirstChild(Target)
+
+            if not (TPlayer and TPlayer.Character) then
+                setAvatarStatus("Character not ready.", true)
+                return
+            end
+
+            local LHumanoid = LChar and LChar:FindFirstChildOfClass("Humanoid")
+            local THumanoid = TPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+            if not (LHumanoid and THumanoid) then
+                setAvatarStatus("Character not ready.", true)
+                return
+            end
+
+            local ok, errorMessage = pcall(function()
+                setAvatarStatus("Copying avatar from " .. Target .. "...", false)
+
+                local LDesc = LHumanoid:GetAppliedDescription()
+
+                for _, acc in ipairs(LDesc:GetAccessories(true)) do
+                    if acc.AssetId and tonumber(acc.AssetId) then
+                        Remotes.Wear:InvokeServer(tonumber(acc.AssetId))
+                        task.wait(0.2)
+                    end
+                end
+
+                if tonumber(LDesc.Shirt) then
+                    Remotes.Wear:InvokeServer(tonumber(LDesc.Shirt))
+                    task.wait(0.2)
+                end
+
+                if tonumber(LDesc.Pants) then
+                    Remotes.Wear:InvokeServer(tonumber(LDesc.Pants))
+                    task.wait(0.2)
+                end
+
+                if tonumber(LDesc.Face) then
+                    Remotes.Wear:InvokeServer(tonumber(LDesc.Face))
+                    task.wait(0.2)
+                end
+
+                local PDesc = THumanoid:GetAppliedDescription()
+
+                local argsBody = {
+                    [1] = {
+                        [1] = PDesc.Torso,
+                        [2] = PDesc.RightArm,
+                        [3] = PDesc.LeftArm,
+                        [4] = PDesc.RightLeg,
+                        [5] = PDesc.LeftLeg,
+                        [6] = PDesc.Head
+                    }
+                }
+                Remotes.ChangeCharacterBody:InvokeServer(unpack(argsBody))
+                task.wait(0.5)
+
+                if tonumber(PDesc.Shirt) then
+                    Remotes.Wear:InvokeServer(tonumber(PDesc.Shirt))
+                    task.wait(0.3)
+                end
+
+                if tonumber(PDesc.Pants) then
+                    Remotes.Wear:InvokeServer(tonumber(PDesc.Pants))
+                    task.wait(0.3)
+                end
+
+                if tonumber(PDesc.Face) then
+                    Remotes.Wear:InvokeServer(tonumber(PDesc.Face))
+                    task.wait(0.3)
+                end
+
+                for _, v in ipairs(PDesc:GetAccessories(true)) do
+                    if v.AssetId and tonumber(v.AssetId) then
+                        Remotes.Wear:InvokeServer(tonumber(v.AssetId))
+                        task.wait(0.3)
+                    end
+                end
+
+                local SkinColor = TPlayer.Character:FindFirstChild("Body Colors")
+                if SkinColor then
+                    Remotes.ChangeBodyColor:FireServer(tostring(SkinColor.HeadColor))
+                    task.wait(0.3)
+                end
+
+                if tonumber(PDesc.IdleAnimation) then
+                    Remotes.Wear:InvokeServer(tonumber(PDesc.IdleAnimation))
+                    task.wait(0.3)
+                end
+
+                local Bag = TPlayer:FindFirstChild("PlayersBag")
+                if Bag then
+                    if Bag:FindFirstChild("RPName") and Bag.RPName.Value ~= "" then
+                        Remotes.RPNameText:FireServer("RolePlayName", Bag.RPName.Value)
+                        task.wait(0.3)
+                    end
+                    if Bag:FindFirstChild("RPBio") and Bag.RPBio.Value ~= "" then
+                        Remotes.RPNameText:FireServer("RolePlayBio", Bag.RPBio.Value)
+                        task.wait(0.3)
+                    end
+                    if Bag:FindFirstChild("RPNameColor") then
+                        Remotes.RPNameColor:FireServer("PickingRPNameColor", Bag.RPNameColor.Value)
+                        task.wait(0.3)
+                    end
+                    if Bag:FindFirstChild("RPBioColor") then
+                        Remotes.RPNameColor:FireServer("PickingRPBioColor", Bag.RPBioColor.Value)
+                        task.wait(0.3)
+                    end
+                end
+            end)
+
+            if not ok then
+                setAvatarStatus("Copy failed: " .. tostring(errorMessage), true)
+                return
+            end
+
+            setAvatarStatus("Avatar copied from " .. Target .. ".", false)
         end)
 
     elseif title == "Home" then
@@ -2606,6 +3034,24 @@ local function buildImportedTabUI(parentFrame, title)
                 if hrp then hrp.CFrame = CFrame.new(h[2]) end
             end)
         end
+        addLabel("Home Music")
+        local homeMusicId = ""
+        addTextBoxRow("Music ID", "Enter id", function(v)
+            homeMusicId = tostring(v or "")
+        end)
+        addButton("Play Home Music", function()
+            local id = homeMusicId
+            if id == "" then
+                return
+            end
+            pcall(function()
+                local re = ReplicatedStorage:FindFirstChild("RE")
+                local ev = re and re:FindFirstChild("1Player1sHous1e")
+                if ev then
+                    ev:FireServer("PickHouseMusicText", tostring(id))
+                end
+            end)
+        end)
 
     elseif title == "Car" then
         addLabel("NoMotor Vehicles")
@@ -2726,7 +3172,7 @@ local function buildImportedTabUI(parentFrame, title)
 
     else
         addLabel(title)
-        addLabel("z4trox credits")
+        addLabel("z4trox")
     end
 
     Scroll.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y + 4)
