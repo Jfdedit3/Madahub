@@ -41,6 +41,77 @@ Main.BackgroundTransparency = 0.02
 Main.BorderSizePixel = 0
 Main.Parent = ScreenGui
 
+-- External Toggle Button (outside GUI panel)
+local ExternalToggle = Instance.new("TextButton")
+ExternalToggle.Name = "ExternalToggle"
+ExternalToggle.Size = UDim2.new(0, 68, 0, 26)
+ExternalToggle.Position = UDim2.new(0, 16, 0.5, -13)
+ExternalToggle.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+ExternalToggle.Text = "HIDE"
+ExternalToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExternalToggle.Font = Enum.Font.GothamBold
+ExternalToggle.TextSize = 10
+ExternalToggle.ZIndex = 60
+ExternalToggle.Parent = ScreenGui
+Instance.new("UICorner", ExternalToggle).CornerRadius = UDim.new(0, 6)
+
+local ExternalStroke = Instance.new("UIStroke")
+ExternalStroke.Color = Color3.fromRGB(255, 255, 255)
+ExternalStroke.Transparency = 0.75
+ExternalStroke.Thickness = 1
+ExternalStroke.Parent = ExternalToggle
+
+ExternalToggle.MouseButton1Click:Connect(function()
+    Main.Visible = not Main.Visible
+    if Main.Visible then
+        ExternalToggle.Text = "HIDE"
+        ExternalToggle.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+    else
+        ExternalToggle.Text = "OPEN"
+        ExternalToggle.BackgroundColor3 = Color3.fromRGB(60, 180, 90)
+    end
+end)
+
+do
+    local dragging = false
+    local dragInput, dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        ExternalToggle.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+
+    ExternalToggle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = ExternalToggle.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    ExternalToggle.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+end
+
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 10)
 
 local MainShadow = Instance.new("Frame")
@@ -2247,7 +2318,7 @@ local function buildCreditsUI(parentFrame)
     MainText.Size = UDim2.new(1, -20, 0, 60)
     MainText.Position = UDim2.new(0, 10, 0.5, -40)
     MainText.BackgroundTransparency = 1
-    MainText.Text = "Mada hub v4\\z4trox"
+    MainText.Text = "Mada hub v4\\nz4trox"
     MainText.TextColor3 = Color3.fromRGB(50, 255, 100)
     MainText.Font = Enum.Font.GothamBold
     MainText.TextSize = 13
